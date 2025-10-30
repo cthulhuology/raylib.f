@@ -30,7 +30,7 @@ FUNCTION: SetWindowMonitor                 ( i -- )                 \ Set monito
 FUNCTION: SetWindowMinSize                 ( i i -- )               \ Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE) : int width, int height
 FUNCTION: SetWindowMaxSize                 ( i i -- )               \ Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE) : int width, int height
 FUNCTION: SetWindowSize                    ( i i -- )               \ Set window dimensions : int width, int height
-FUNCTION: SetWindowOpacity                 ( f -- )                 \ Set window opacity [0.0f..1.0f] : float opacity
+FUNCTION: SetWindowOpacity                 ( %f -- )                \ Set window opacity [0.0f..1.0f] : float opacity
 FUNCTION: SetWindowFocused                 ( -- )                   \ Set window focused : void
 FUNCTION: GetWindowHandle                  ( -- a )                 \ Get native window handle : void
 FUNCTION: GetScreenWidth                   ( -- i )                 \ Get current screen width : void
@@ -109,8 +109,8 @@ FUNCTION: GetCameraMatrix2D                ( a a -- )               \ Get camera
 
 \ Timing-related Module
 FUNCTION: SetTargetFPS                     ( i -- )                 \ Set target FPS (maximum) : int fps
-FUNCTION: GetFrameTime                     ( -- f )                 \ Get time in seconds for last frame drawn (delta time) : void
-FUNCTION: GetTime                          ( -- d )                 \ Get elapsed time in seconds since InitWindow() : void
+FUNCTION: GetFrameTime                     ( -- %f )                \ Get time in seconds for last frame drawn (delta time) : void
+FUNCTION: GetTime                          ( -- %%d )               \ Get elapsed time in seconds since InitWindow() : void
 FUNCTION: GetFPS                           ( -- i )                 \ Get current FPS : void
 
 \ Custom frame control Module
@@ -118,7 +118,7 @@ FUNCTION: GetFPS                           ( -- i )                 \ Get curren
 \ NOTE: Those Module are intended for advanced users that want full control over the frame processing
 FUNCTION: SwapScreenBuffer                 ( -- )                   \ Swap back buffer with front buffer (screen drawing) : void
 FUNCTION: PollInputEvents                  ( -- )                   \ Register all input events : void
-FUNCTION: WaitTime                         ( d -- )                 \ Wait for some time (halt program execution) : double seconds
+FUNCTION: WaitTime                         ( %%d -- )               \ Wait for some time (halt program execution) : double seconds
 
 \ Random values generation Module
 FUNCTION: SetRandomSeed                    ( u -- )                 \ Set the seed for the random number generator : unsigned int seed
@@ -218,9 +218,9 @@ FUNCTION: IsGamepadButtonReleased          ( i i -- i )             \ Check if a
 FUNCTION: IsGamepadButtonUp                ( i i -- i )             \ Check if a gamepad button is NOT being pressed : int gamepad, int button
 FUNCTION: GetGamepadButtonPressed          ( -- i )                 \ Get the last gamepad button pressed : void
 FUNCTION: GetGamepadAxisCount              ( i -- i )               \ Get axis count for a gamepad : int gamepad
-FUNCTION: GetGamepadAxisMovement           ( i i -- f )             \ Get movement value for a gamepad axis : int gamepad, int axis
+FUNCTION: GetGamepadAxisMovement           ( i i -- %f )            \ Get movement value for a gamepad axis : int gamepad, int axis
 FUNCTION: SetGamepadMappings               ( a -- i )               \ Set internal gamepad mappings (SDL_GameControllerDB) : const char *mappings
-FUNCTION: SetGamepadVibration              ( i f f f -- )           \ Set gamepad vibration for both motors (duration in seconds) : int gamepad, float leftMotor, float rightMotor, float duration
+FUNCTION: SetGamepadVibration              ( i %f %f %f -- )        \ Set gamepad vibration for both motors (duration in seconds) : int gamepad, float leftMotor, float rightMotor, float duration
 
 \ Input-related Module: mouse
 FUNCTION: IsMouseButtonPressed             ( i -- i )               \ Check if a mouse button has been pressed once : int button
@@ -233,8 +233,8 @@ FUNCTION: GetMousePosition                 ( a -- )                 \ Get mouse 
 FUNCTION: GetMouseDelta                    ( a -- )                 \ Get mouse delta between frames : void
 FUNCTION: SetMousePosition                 ( i i -- )               \ Set mouse position XY : int x, int y
 FUNCTION: SetMouseOffset                   ( i i -- )               \ Set mouse offset : int offsetX, int offsetY
-FUNCTION: SetMouseScale                    ( f f -- )               \ Set mouse scaling : float scaleX, float scaleY
-FUNCTION: GetMouseWheelMove                ( -- f )                 \ Get mouse wheel movement for X or Y, whichever is larger : void
+FUNCTION: SetMouseScale                    ( %f %f -- )             \ Set mouse scaling : float scaleX, float scaleY
+FUNCTION: GetMouseWheelMove                ( -- %f )                \ Get mouse wheel movement for X or Y, whichever is larger : void
 FUNCTION: GetMouseWheelMoveV               ( a -- )                 \ Get mouse wheel movement for both X and Y : void
 FUNCTION: SetMouseCursor                   ( i -- )                 \ Set mouse cursor : int cursor
 
@@ -247,13 +247,13 @@ FUNCTION: GetTouchPointCount               ( -- i )                 \ Get number
 FUNCTION: SetGesturesEnabled               ( u -- )                 \ Enable a set of gestures using flags : unsigned int flags
 FUNCTION: IsGestureDetected                ( u -- i )               \ Check if a gesture have been detected : unsigned int gesture
 FUNCTION: GetGestureDetected               ( -- i )                 \ Get latest detected gesture : void
-FUNCTION: GetGestureHoldDuration           ( -- f )                 \ Get gesture hold time in seconds : void
+FUNCTION: GetGestureHoldDuration           ( -- %f )                \ Get gesture hold time in seconds : void
 FUNCTION: GetGestureDragVector             ( a -- )                 \ Get gesture drag vector : void
-FUNCTION: GetGestureDragAngle              ( -- f )                 \ Get gesture drag angle : void
+FUNCTION: GetGestureDragAngle              ( -- %f )                \ Get gesture drag angle : void
 FUNCTION: GetGesturePinchVector            ( a -- )                 \ Get gesture pinch delta : void
-FUNCTION: GetGesturePinchAngle             ( -- f )                 \ Get gesture pinch angle : void
+FUNCTION: GetGesturePinchAngle             ( -- %f )                \ Get gesture pinch angle : void
 FUNCTION: UpdateCamera                     ( a i -- )               \ Update camera position for selected mode : Camera *camera, int mode
-FUNCTION: UpdateCameraPro                  ( a a a f -- )           \ Update camera movement/rotation : Camera *camera, Vector3 movement, Vector3 rotation, float zoom
+FUNCTION: UpdateCameraPro                  ( a a a %f -- )          \ Update camera movement/rotation : Camera *camera, Vector3 movement, Vector3 rotation, float zoom
 FUNCTION: SetShapesTexture                 ( a a -- )               \ Set texture and rectangle to be used on shapes drawing : Texture2D texture, Rectangle source
 FUNCTION: GetShapesTexture                 ( a -- )                 \ Get texture that is used for shapes drawing : void
 FUNCTION: GetShapesTextureRectangle        ( a -- )                 \ Get texture source rectangle that is used for shapes drawing : void
@@ -263,69 +263,69 @@ FUNCTION: DrawPixel                        ( i i u -- )             \ Draw a pix
 FUNCTION: DrawPixelV                       ( a u -- )               \ Draw a pixel using geometry (Vector version) [Can be slow, use with care] : Vector2 position, Color color
 FUNCTION: DrawLine                         ( i i i i u -- )         \ Draw a line : int startPosX, int startPosY, int endPosX, int endPosY, Color color
 FUNCTION: DrawLineV                        ( a a u -- )             \ Draw a line (using gl lines) : Vector2 startPos, Vector2 endPos, Color color
-FUNCTION: DrawLineEx                       ( a a f u -- )           \ Draw a line (using triangles/quads) : Vector2 startPos, Vector2 endPos, float thick, Color color
+FUNCTION: DrawLineEx                       ( a a %f u -- )          \ Draw a line (using triangles/quads) : Vector2 startPos, Vector2 endPos, float thick, Color color
 FUNCTION: DrawLineStrip                    ( a i u -- )             \ Draw lines sequence (using gl lines) : const Vector2 *points, int pointCount, Color color
-FUNCTION: DrawLineBezier                   ( a a f u -- )           \ Draw line segment cubic-bezier in-out interpolation : Vector2 startPos, Vector2 endPos, float thick, Color color
+FUNCTION: DrawLineBezier                   ( a a %f u -- )          \ Draw line segment cubic-bezier in-out interpolation : Vector2 startPos, Vector2 endPos, float thick, Color color
 FUNCTION: DrawLineDashed                   ( a a i i u -- )         \ Draw a dashed line : Vector2 startPos, Vector2 endPos, int dashSize, int spaceSize, Color color
-FUNCTION: DrawCircle                       ( i i f u -- )           \ Draw a color-filled circle : int centerX, int centerY, float radius, Color color
-FUNCTION: DrawCircleSector                 ( a f f f i u -- )       \ Draw a piece of a circle : Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color
-FUNCTION: DrawCircleSectorLines            ( a f f f i u -- )       \ Draw circle sector outline : Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color
-FUNCTION: DrawCircleGradient               ( i i f u u -- )         \ Draw a gradient-filled circle : int centerX, int centerY, float radius, Color inner, Color outer
-FUNCTION: DrawCircleV                      ( a f u -- )             \ Draw a color-filled circle (Vector version) : Vector2 center, float radius, Color color
-FUNCTION: DrawCircleLines                  ( i i f u -- )           \ Draw circle outline : int centerX, int centerY, float radius, Color color
-FUNCTION: DrawCircleLinesV                 ( a f u -- )             \ Draw circle outline (Vector version) : Vector2 center, float radius, Color color
-FUNCTION: DrawEllipse                      ( i i f f u -- )         \ Draw ellipse : int centerX, int centerY, float radiusH, float radiusV, Color color
-FUNCTION: DrawEllipseV                     ( a f f u -- )           \ Draw ellipse (Vector version) : Vector2 center, float radiusH, float radiusV, Color color
-FUNCTION: DrawEllipseLines                 ( i i f f u -- )         \ Draw ellipse outline : int centerX, int centerY, float radiusH, float radiusV, Color color
-FUNCTION: DrawEllipseLinesV                ( a f f u -- )           \ Draw ellipse outline (Vector version) : Vector2 center, float radiusH, float radiusV, Color color
-FUNCTION: DrawRing                         ( a f f f f i u -- )     \ Draw ring : Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color
-FUNCTION: DrawRingLines                    ( a f f f f i u -- )     \ Draw ring outline : Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color
+FUNCTION: DrawCircle                       ( i i %f u -- )          \ Draw a color-filled circle : int centerX, int centerY, float radius, Color color
+FUNCTION: DrawCircleSector                 ( a %f %f %f i u -- )    \ Draw a piece of a circle : Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color
+FUNCTION: DrawCircleSectorLines            ( a %f %f %f i u -- )    \ Draw circle sector outline : Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color
+FUNCTION: DrawCircleGradient               ( i i %f u u -- )        \ Draw a gradient-filled circle : int centerX, int centerY, float radius, Color inner, Color outer
+FUNCTION: DrawCircleV                      ( a %f u -- )            \ Draw a color-filled circle (Vector version) : Vector2 center, float radius, Color color
+FUNCTION: DrawCircleLines                  ( i i %f u -- )          \ Draw circle outline : int centerX, int centerY, float radius, Color color
+FUNCTION: DrawCircleLinesV                 ( a %f u -- )            \ Draw circle outline (Vector version) : Vector2 center, float radius, Color color
+FUNCTION: DrawEllipse                      ( i i %f %f u -- )       \ Draw ellipse : int centerX, int centerY, float radiusH, float radiusV, Color color
+FUNCTION: DrawEllipseV                     ( a %f %f u -- )         \ Draw ellipse (Vector version) : Vector2 center, float radiusH, float radiusV, Color color
+FUNCTION: DrawEllipseLines                 ( i i %f %f u -- )       \ Draw ellipse outline : int centerX, int centerY, float radiusH, float radiusV, Color color
+FUNCTION: DrawEllipseLinesV                ( a %f %f u -- )         \ Draw ellipse outline (Vector version) : Vector2 center, float radiusH, float radiusV, Color color
+FUNCTION: DrawRing                         ( a %f %f %f %f i u -- ) \ Draw ring : Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color
+FUNCTION: DrawRingLines                    ( a %f %f %f %f i u -- ) \ Draw ring outline : Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color
 FUNCTION: DrawRectangle                    ( i i i i u -- )         \ Draw a color-filled rectangle : int posX, int posY, int width, int height, Color color
 FUNCTION: DrawRectangleV                   ( a a u -- )             \ Draw a color-filled rectangle (Vector version) : Vector2 position, Vector2 size, Color color
 FUNCTION: DrawRectangleRec                 ( a u -- )               \ Draw a color-filled rectangle : Rectangle rec, Color color
-FUNCTION: DrawRectanglePro                 ( a a f u -- )           \ Draw a color-filled rectangle with pro parameters : Rectangle rec, Vector2 origin, float rotation, Color color
+FUNCTION: DrawRectanglePro                 ( a a %f u -- )          \ Draw a color-filled rectangle with pro parameters : Rectangle rec, Vector2 origin, float rotation, Color color
 FUNCTION: DrawRectangleGradientV           ( i i i i u u -- )       \ Draw a vertical-gradient-filled rectangle : int posX, int posY, int width, int height, Color top, Color bottom
 FUNCTION: DrawRectangleGradientH           ( i i i i u u -- )       \ Draw a horizontal-gradient-filled rectangle : int posX, int posY, int width, int height, Color left, Color right
 FUNCTION: DrawRectangleGradientEx          ( a u u u u -- )         \ Draw a gradient-filled rectangle with custom vertex colors : Rectangle rec, Color topLeft, Color bottomLeft, Color bottomRight, Color topRight
 FUNCTION: DrawRectangleLines               ( i i i i u -- )         \ Draw rectangle outline : int posX, int posY, int width, int height, Color color
-FUNCTION: DrawRectangleLinesEx             ( a f u -- )             \ Draw rectangle outline with extended parameters : Rectangle rec, float lineThick, Color color
-FUNCTION: DrawRectangleRounded             ( a f i u -- )           \ Draw rectangle with rounded edges : Rectangle rec, float roundness, int segments, Color color
-FUNCTION: DrawRectangleRoundedLines        ( a f i u -- )           \ Draw rectangle lines with rounded edges : Rectangle rec, float roundness, int segments, Color color
-FUNCTION: DrawRectangleRoundedLinesEx      ( a f i f u -- )         \ Draw rectangle with rounded edges outline : Rectangle rec, float roundness, int segments, float lineThick, Color color
+FUNCTION: DrawRectangleLinesEx             ( a %f u -- )            \ Draw rectangle outline with extended parameters : Rectangle rec, float lineThick, Color color
+FUNCTION: DrawRectangleRounded             ( a %f i u -- )          \ Draw rectangle with rounded edges : Rectangle rec, float roundness, int segments, Color color
+FUNCTION: DrawRectangleRoundedLines        ( a %f i u -- )          \ Draw rectangle lines with rounded edges : Rectangle rec, float roundness, int segments, Color color
+FUNCTION: DrawRectangleRoundedLinesEx      ( a %f i %f u -- )       \ Draw rectangle with rounded edges outline : Rectangle rec, float roundness, int segments, float lineThick, Color color
 FUNCTION: DrawTriangle                     ( a a a u -- )           \ Draw a color-filled triangle (vertex in counter-clockwise order!) : Vector2 v1, Vector2 v2, Vector2 v3, Color color
 FUNCTION: DrawTriangleLines                ( a a a u -- )           \ Draw triangle outline (vertex in counter-clockwise order!) : Vector2 v1, Vector2 v2, Vector2 v3, Color color
 FUNCTION: DrawTriangleFan                  ( a i u -- )             \ Draw a triangle fan defined by points (first vertex is the center) : const Vector2 *points, int pointCount, Color color
 FUNCTION: DrawTriangleStrip                ( a i u -- )             \ Draw a triangle strip defined by points : const Vector2 *points, int pointCount, Color color
-FUNCTION: DrawPoly                         ( a i f f u -- )         \ Draw a regular polygon (Vector version) : Vector2 center, int sides, float radius, float rotation, Color color
-FUNCTION: DrawPolyLines                    ( a i f f u -- )         \ Draw a polygon outline of n sides : Vector2 center, int sides, float radius, float rotation, Color color
-FUNCTION: DrawPolyLinesEx                  ( a i f f f u -- )       \ Draw a polygon outline of n sides with extended parameters : Vector2 center, int sides, float radius, float rotation, float lineThick, Color color
+FUNCTION: DrawPoly                         ( a i %f %f u -- )       \ Draw a regular polygon (Vector version) : Vector2 center, int sides, float radius, float rotation, Color color
+FUNCTION: DrawPolyLines                    ( a i %f %f u -- )       \ Draw a polygon outline of n sides : Vector2 center, int sides, float radius, float rotation, Color color
+FUNCTION: DrawPolyLinesEx                  ( a i %f %f %f u -- )    \ Draw a polygon outline of n sides with extended parameters : Vector2 center, int sides, float radius, float rotation, float lineThick, Color color
 
 \ Splines drawing Module
-FUNCTION: DrawSplineLinear                 ( a i f u -- )           \ Draw spline: Linear, minimum 2 points : const Vector2 *points, int pointCount, float thick, Color color
-FUNCTION: DrawSplineBasis                  ( a i f u -- )           \ Draw spline: B-Spline, minimum 4 points : const Vector2 *points, int pointCount, float thick, Color color
-FUNCTION: DrawSplineCatmullRom             ( a i f u -- )           \ Draw spline: Catmull-Rom, minimum 4 points : const Vector2 *points, int pointCount, float thick, Color color
-FUNCTION: DrawSplineBezierQuadratic        ( a i f u -- )           \ Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...] : const Vector2 *points, int pointCount, float thick, Color color
-FUNCTION: DrawSplineBezierCubic            ( a i f u -- )           \ Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...] : const Vector2 *points, int pointCount, float thick, Color color
-FUNCTION: DrawSplineSegmentLinear          ( a a f u -- )           \ Draw spline segment: Linear, 2 points : Vector2 p1, Vector2 p2, float thick, Color color
-FUNCTION: DrawSplineSegmentBasis           ( a a a a f u -- )       \ Draw spline segment: B-Spline, 4 points : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thick, Color color
-FUNCTION: DrawSplineSegmentCatmullRom      ( a a a a f u -- )       \ Draw spline segment: Catmull-Rom, 4 points : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thick, Color color
-FUNCTION: DrawSplineSegmentBezierQuadratic ( a a a f u -- )         \ Draw spline segment: Quadratic Bezier, 2 points, 1 control point : Vector2 p1, Vector2 c2, Vector2 p3, float thick, Color color
-FUNCTION: DrawSplineSegmentBezierCubic     ( a a a a f u -- )       \ Draw spline segment: Cubic Bezier, 2 points, 2 control points : Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float thick, Color color
+FUNCTION: DrawSplineLinear                 ( a i %f u -- )          \ Draw spline: Linear, minimum 2 points : const Vector2 *points, int pointCount, float thick, Color color
+FUNCTION: DrawSplineBasis                  ( a i %f u -- )          \ Draw spline: B-Spline, minimum 4 points : const Vector2 *points, int pointCount, float thick, Color color
+FUNCTION: DrawSplineCatmullRom             ( a i %f u -- )          \ Draw spline: Catmull-Rom, minimum 4 points : const Vector2 *points, int pointCount, float thick, Color color
+FUNCTION: DrawSplineBezierQuadratic        ( a i %f u -- )          \ Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...] : const Vector2 *points, int pointCount, float thick, Color color
+FUNCTION: DrawSplineBezierCubic            ( a i %f u -- )          \ Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...] : const Vector2 *points, int pointCount, float thick, Color color
+FUNCTION: DrawSplineSegmentLinear          ( a a %f u -- )          \ Draw spline segment: Linear, 2 points : Vector2 p1, Vector2 p2, float thick, Color color
+FUNCTION: DrawSplineSegmentBasis           ( a a a a %f u -- )      \ Draw spline segment: B-Spline, 4 points : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thick, Color color
+FUNCTION: DrawSplineSegmentCatmullRom      ( a a a a %f u -- )      \ Draw spline segment: Catmull-Rom, 4 points : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thick, Color color
+FUNCTION: DrawSplineSegmentBezierQuadratic ( a a a %f u -- )        \ Draw spline segment: Quadratic Bezier, 2 points, 1 control point : Vector2 p1, Vector2 c2, Vector2 p3, float thick, Color color
+FUNCTION: DrawSplineSegmentBezierCubic     ( a a a a %f u -- )      \ Draw spline segment: Cubic Bezier, 2 points, 2 control points : Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float thick, Color color
 
 \ Spline segment point evaluation Module, for a given t [0.0f .. 1.0f]
-FUNCTION: GetSplinePointLinear             ( a a f a -- )           \ Get (evaluate) spline point: Linear : Vector2 startPos, Vector2 endPos, float t
-FUNCTION: GetSplinePointBasis              ( a a a a f a -- )       \ Get (evaluate) spline point: B-Spline : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t
-FUNCTION: GetSplinePointCatmullRom         ( a a a a f a -- )       \ Get (evaluate) spline point: Catmull-Rom : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t
-FUNCTION: GetSplinePointBezierQuad         ( a a a f a -- )         \ Get (evaluate) spline point: Quadratic Bezier : Vector2 p1, Vector2 c2, Vector2 p3, float t
-FUNCTION: GetSplinePointBezierCubic        ( a a a a f a -- )       \ Get (evaluate) spline point: Cubic Bezier : Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t
+FUNCTION: GetSplinePointLinear             ( a a %f a -- )          \ Get (evaluate) spline point: Linear : Vector2 startPos, Vector2 endPos, float t
+FUNCTION: GetSplinePointBasis              ( a a a a %f a -- )      \ Get (evaluate) spline point: B-Spline : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t
+FUNCTION: GetSplinePointCatmullRom         ( a a a a %f a -- )      \ Get (evaluate) spline point: Catmull-Rom : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t
+FUNCTION: GetSplinePointBezierQuad         ( a a a %f a -- )        \ Get (evaluate) spline point: Quadratic Bezier : Vector2 p1, Vector2 c2, Vector2 p3, float t
+FUNCTION: GetSplinePointBezierCubic        ( a a a a %f a -- )      \ Get (evaluate) spline point: Cubic Bezier : Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t
 
 \ Basic shapes collision detection Module
 FUNCTION: CheckCollisionRecs               ( a a -- i )             \ Check collision between two rectangles : Rectangle rec1, Rectangle rec2
-FUNCTION: CheckCollisionCircles            ( a f a f -- i )         \ Check collision between two circles : Vector2 center1, float radius1, Vector2 center2, float radius2
-FUNCTION: CheckCollisionCircleRec          ( a f a -- i )           \ Check collision between circle and rectangle : Vector2 center, float radius, Rectangle rec
-FUNCTION: CheckCollisionCircleLine         ( a f a a -- i )         \ Check if circle collides with a line created betweeen two points [p1] and [p2] : Vector2 center, float radius, Vector2 p1, Vector2 p2
+FUNCTION: CheckCollisionCircles            ( a %f a %f -- i )       \ Check collision between two circles : Vector2 center1, float radius1, Vector2 center2, float radius2
+FUNCTION: CheckCollisionCircleRec          ( a %f a -- i )          \ Check collision between circle and rectangle : Vector2 center, float radius, Rectangle rec
+FUNCTION: CheckCollisionCircleLine         ( a %f a a -- i )        \ Check if circle collides with a line created betweeen two points [p1] and [p2] : Vector2 center, float radius, Vector2 p1, Vector2 p2
 FUNCTION: CheckCollisionPointRec           ( a a -- i )             \ Check if point is inside rectangle : Vector2 point, Rectangle rec
-FUNCTION: CheckCollisionPointCircle        ( a a f -- i )           \ Check if point is inside circle : Vector2 point, Vector2 center, float radius
+FUNCTION: CheckCollisionPointCircle        ( a a %f -- i )          \ Check if point is inside circle : Vector2 point, Vector2 center, float radius
 FUNCTION: CheckCollisionPointTriangle      ( a a a a -- i )         \ Check if point is inside a triangle : Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3
 FUNCTION: CheckCollisionPointLine          ( a a a i -- i )         \ Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold] : Vector2 point, Vector2 p1, Vector2 p2, int threshold
 FUNCTION: CheckCollisionPointPoly          ( a a i -- i )           \ Check if point is within a polygon described by array of vertices : Vector2 point, const Vector2 *points, int pointCount
@@ -351,11 +351,11 @@ FUNCTION: ExportImageAsCode                ( a a -- i )             \ Export ima
 \ Image generation Module
 FUNCTION: GenImageColor                    ( i i u a -- )           \ Generate image: plain color : int width, int height, Color color
 FUNCTION: GenImageGradientLinear           ( i i i u u a -- )       \ Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient : int width, int height, int direction, Color start, Color end
-FUNCTION: GenImageGradientRadial           ( i i f u u a -- )       \ Generate image: radial gradient : int width, int height, float density, Color inner, Color outer
-FUNCTION: GenImageGradientSquare           ( i i f u u a -- )       \ Generate image: square gradient : int width, int height, float density, Color inner, Color outer
+FUNCTION: GenImageGradientRadial           ( i i %f u u a -- )      \ Generate image: radial gradient : int width, int height, float density, Color inner, Color outer
+FUNCTION: GenImageGradientSquare           ( i i %f u u a -- )      \ Generate image: square gradient : int width, int height, float density, Color inner, Color outer
 FUNCTION: GenImageChecked                  ( i i i i u u a -- )     \ Generate image: checked : int width, int height, int checksX, int checksY, Color col1, Color col2
-FUNCTION: GenImageWhiteNoise               ( i i f a -- )           \ Generate image: white noise : int width, int height, float factor
-FUNCTION: GenImagePerlinNoise              ( i i i i f a -- )       \ Generate image: perlin noise : int width, int height, int offsetX, int offsetY, float scale
+FUNCTION: GenImageWhiteNoise               ( i i %f a -- )          \ Generate image: white noise : int width, int height, float factor
+FUNCTION: GenImagePerlinNoise              ( i i i i %f a -- )      \ Generate image: perlin noise : int width, int height, int offsetX, int offsetY, float scale
 FUNCTION: GenImageCellular                 ( i i i a -- )           \ Generate image: cellular algorithm, bigger tileSize means bigger cells : int width, int height, int tileSize
 FUNCTION: GenImageText                     ( i i a a -- )           \ Generate image: grayscale image from text data : int width, int height, const char *text
 
@@ -364,12 +364,12 @@ FUNCTION: ImageCopy                        ( a a -- )               \ Create an 
 FUNCTION: ImageFromImage                   ( a a a -- )             \ Create an image from another image piece : Image image, Rectangle rec
 FUNCTION: ImageFromChannel                 ( a i a -- )             \ Create an image from a selected channel of another image (GRAYSCALE) : Image image, int selectedChannel
 FUNCTION: ImageText                        ( a i u a -- )           \ Create an image from text (default font) : const char *text, int fontSize, Color color
-FUNCTION: ImageTextEx                      ( a a f f u a -- )       \ Create an image from text (custom sprite font) : Font font, const char *text, float fontSize, float spacing, Color tint
+FUNCTION: ImageTextEx                      ( a a %f %f u a -- )     \ Create an image from text (custom sprite font) : Font font, const char *text, float fontSize, float spacing, Color tint
 FUNCTION: ImageFormat                      ( a i -- )               \ Convert image data to desired format : Image *image, int newFormat
 FUNCTION: ImageToPOT                       ( a u -- )               \ Convert image to POT (power-of-two) : Image *image, Color fill
 FUNCTION: ImageCrop                        ( a a -- )               \ Crop an image to a defined rectangle : Image *image, Rectangle crop
-FUNCTION: ImageAlphaCrop                   ( a f -- )               \ Crop image depending on alpha value : Image *image, float threshold
-FUNCTION: ImageAlphaClear                  ( a u f -- )             \ Clear alpha channel to desired color : Image *image, Color color, float threshold
+FUNCTION: ImageAlphaCrop                   ( a %f -- )              \ Crop image depending on alpha value : Image *image, float threshold
+FUNCTION: ImageAlphaClear                  ( a u %f -- )            \ Clear alpha channel to desired color : Image *image, Color color, float threshold
 FUNCTION: ImageAlphaMask                   ( a a -- )               \ Apply alpha mask to image : Image *image, Image alphaMask
 FUNCTION: ImageAlphaPremultiply            ( a -- )                 \ Premultiply alpha channel : Image *image
 FUNCTION: ImageBlurGaussian                ( a i -- )               \ Apply Gaussian blur using a box blur approximation : Image *image, int blurSize
@@ -387,14 +387,14 @@ FUNCTION: ImageRotateCCW                   ( a -- )                 \ Rotate ima
 FUNCTION: ImageColorTint                   ( a u -- )               \ Modify image color: tint : Image *image, Color color
 FUNCTION: ImageColorInvert                 ( a -- )                 \ Modify image color: invert : Image *image
 FUNCTION: ImageColorGrayscale              ( a -- )                 \ Modify image color: grayscale : Image *image
-FUNCTION: ImageColorContrast               ( a f -- )               \ Modify image color: contrast (-100 to 100) : Image *image, float contrast
+FUNCTION: ImageColorContrast               ( a %f -- )              \ Modify image color: contrast (-100 to 100) : Image *image, float contrast
 FUNCTION: ImageColorBrightness             ( a i -- )               \ Modify image color: brightness (-255 to 255) : Image *image, int brightness
 FUNCTION: ImageColorReplace                ( a u u -- )             \ Modify image color: replace color : Image *image, Color color, Color replace
 FUNCTION: LoadImageColors                  ( a -- a )               \ Load color data from image as a Color array (RGBA - 32bit) : Image image
 FUNCTION: LoadImagePalette                 ( a i a -- a )           \ Load colors palette from image as a Color array (RGBA - 32bit) : Image image, int maxPaletteSize, int *colorCount
 FUNCTION: UnloadImageColors                ( a -- )                 \ Unload color data loaded with LoadImageColors() : Color *colors
 FUNCTION: UnloadImagePalette               ( a -- )                 \ Unload colors palette loaded with LoadImagePalette() : Color *colors
-FUNCTION: GetImageAlphaBorder              ( a f a -- )             \ Get image alpha border rectangle : Image image, float threshold
+FUNCTION: GetImageAlphaBorder              ( a %f a -- )            \ Get image alpha border rectangle : Image image, float threshold
 FUNCTION: GetImageColor                    ( a i i -- u )           \ Get image pixel color at (x, y) position : Image image, int x, int y
 
 \ Image drawing Module
@@ -421,7 +421,7 @@ FUNCTION: ImageDrawTriangleFan             ( a a i u -- )           \ Draw a tri
 FUNCTION: ImageDrawTriangleStrip           ( a a i u -- )           \ Draw a triangle strip defined by points within an image : Image *dst, const Vector2 *points, int pointCount, Color color
 FUNCTION: ImageDraw                        ( a a a a u -- )         \ Draw a source image within a destination image (tint applied to source) : Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint
 FUNCTION: ImageDrawText                    ( a a i i i u -- )       \ Draw text (using default font) within an image (destination) : Image *dst, const char *text, int posX, int posY, int fontSize, Color color
-FUNCTION: ImageDrawTextEx                  ( a a a a f f u -- )     \ Draw text (custom sprite font) within an image (destination) : Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint
+FUNCTION: ImageDrawTextEx                  ( a a a a %f %f u -- )   \ Draw text (custom sprite font) within an image (destination) : Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint
 
 \ Texture loading Module
 
@@ -445,25 +445,25 @@ FUNCTION: SetTextureWrap                   ( a i -- )               \ Set textur
 \ Texture drawing Module
 FUNCTION: DrawTexture                      ( a i i u -- )           \ Draw a Texture2D : Texture2D texture, int posX, int posY, Color tint
 FUNCTION: DrawTextureV                     ( a a u -- )             \ Draw a Texture2D with position defined as Vector2 : Texture2D texture, Vector2 position, Color tint
-FUNCTION: DrawTextureEx                    ( a a f f u -- )         \ Draw a Texture2D with extended parameters : Texture2D texture, Vector2 position, float rotation, float scale, Color tint
+FUNCTION: DrawTextureEx                    ( a a %f %f u -- )       \ Draw a Texture2D with extended parameters : Texture2D texture, Vector2 position, float rotation, float scale, Color tint
 FUNCTION: DrawTextureRec                   ( a a a u -- )           \ Draw a part of a texture defined by a rectangle : Texture2D texture, Rectangle source, Vector2 position, Color tint
-FUNCTION: DrawTexturePro                   ( a a a a f u -- )       \ Draw a part of a texture defined by a rectangle with 'pro' parameters : Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint
-FUNCTION: DrawTextureNPatch                ( a a a a f u -- )       \ Draws a texture (or part of it) that stretches or shrinks nicely : Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint
+FUNCTION: DrawTexturePro                   ( a a a a %f u -- )      \ Draw a part of a texture defined by a rectangle with 'pro' parameters : Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint
+FUNCTION: DrawTextureNPatch                ( a a a a %f u -- )      \ Draws a texture (or part of it) that stretches or shrinks nicely : Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint
 
 \ Color/pixel related Module
 FUNCTION: ColorIsEqual                     ( u u -- i )             \ Check if two colors are equal : Color col1, Color col2
-FUNCTION: Fade                             ( u f -- u )             \ Get color with alpha applied, alpha goes from 0.0f to 1.0f : Color color, float alpha
+FUNCTION: Fade                             ( u %f -- u )            \ Get color with alpha applied, alpha goes from 0.0f to 1.0f : Color color, float alpha
 FUNCTION: ColorToInt                       ( u -- i )               \ Get hexadecimal value for a Color (0xRRGGBBAA) : Color color
 FUNCTION: ColorNormalize                   ( u a -- )               \ Get Color normalized as float [0..1] : Color color
 FUNCTION: ColorFromNormalized              ( a -- u )               \ Get Color from normalized values [0..1] : Vector4 normalized
 FUNCTION: ColorToHSV                       ( u a -- )               \ Get HSV values for a Color, hue [0..360], saturation/value [0..1] : Color color
-FUNCTION: ColorFromHSV                     ( f f f -- u )           \ Get a Color from HSV values, hue [0..360], saturation/value [0..1] : float hue, float saturation, float value
+FUNCTION: ColorFromHSV                     ( %f %f %f -- u )        \ Get a Color from HSV values, hue [0..360], saturation/value [0..1] : float hue, float saturation, float value
 FUNCTION: ColorTint                        ( u u -- u )             \ Get color multiplied with another color : Color color, Color tint
-FUNCTION: ColorBrightness                  ( u f -- u )             \ Get color with brightness correction, brightness factor goes from -1.0f to 1.0f : Color color, float factor
-FUNCTION: ColorContrast                    ( u f -- u )             \ Get color with contrast correction, contrast values between -1.0f and 1.0f : Color color, float contrast
-FUNCTION: ColorAlpha                       ( u f -- u )             \ Get color with alpha applied, alpha goes from 0.0f to 1.0f : Color color, float alpha
+FUNCTION: ColorBrightness                  ( u %f -- u )            \ Get color with brightness correction, brightness factor goes from -1.0f to 1.0f : Color color, float factor
+FUNCTION: ColorContrast                    ( u %f -- u )            \ Get color with contrast correction, contrast values between -1.0f and 1.0f : Color color, float contrast
+FUNCTION: ColorAlpha                       ( u %f -- u )            \ Get color with alpha applied, alpha goes from 0.0f to 1.0f : Color color, float alpha
 FUNCTION: ColorAlphaBlend                  ( u u u -- u )           \ Get src alpha-blended into dst color with tint : Color dst, Color src, Color tint
-FUNCTION: ColorLerp                        ( u u f -- u )           \ Get color lerp interpolation between two colors, factor [0.0f..1.0f] : Color color1, Color color2, float factor
+FUNCTION: ColorLerp                        ( u u %f -- u )          \ Get color lerp interpolation between two colors, factor [0.0f..1.0f] : Color color1, Color color2, float factor
 FUNCTION: GetColor                         ( u -- u )               \ Get Color structure from hexadecimal value : unsigned int hexValue
 FUNCTION: GetPixelColor                    ( a i -- u )             \ Get Color from a source pixel pointer of certain format : void *srcPtr, int format
 FUNCTION: SetPixelColor                    ( a u i -- )             \ Set color formatted into destination pixel pointer : void *dstPtr, Color color, int format
@@ -485,15 +485,15 @@ FUNCTION: ExportFontAsCode                 ( a a -- i )             \ Export fon
 \ Text drawing Module
 FUNCTION: DrawFPS                          ( i i -- )               \ Draw current FPS : int posX, int posY
 FUNCTION: DrawText                         ( a i i i u -- )         \ Draw text (using default font) : const char *text, int posX, int posY, int fontSize, Color color
-FUNCTION: DrawTextEx                       ( a a a f f u -- )       \ Draw text using font and additional parameters : Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint
-FUNCTION: DrawTextPro                      ( a a a a f f f u -- )   \ Draw text using Font and pro parameters (rotation) : Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint
-FUNCTION: DrawTextCodepoint                ( a i a f u -- )         \ Draw one character (codepoint) : Font font, int codepoint, Vector2 position, float fontSize, Color tint
-FUNCTION: DrawTextCodepoints               ( a a i a f f u -- )     \ Draw multiple character (codepoint) : Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint
+FUNCTION: DrawTextEx                       ( a a a %f %f u -- )     \ Draw text using font and additional parameters : Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint
+FUNCTION: DrawTextPro                      ( a a a a %f %f %f u -- ) \ Draw text using Font and pro parameters (rotation) : Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint
+FUNCTION: DrawTextCodepoint                ( a i a %f u -- )        \ Draw one character (codepoint) : Font font, int codepoint, Vector2 position, float fontSize, Color tint
+FUNCTION: DrawTextCodepoints               ( a a i a %f %f u -- )   \ Draw multiple character (codepoint) : Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint
 
 \ Text font info Module
 FUNCTION: SetTextLineSpacing               ( i -- )                 \ Set vertical line spacing when drawing with line-breaks : int spacing
 FUNCTION: MeasureText                      ( a i -- i )             \ Measure string width for default font : const char *text, int fontSize
-FUNCTION: MeasureTextEx                    ( a a f f a -- )         \ Measure string size for Font : Font font, const char *text, float fontSize, float spacing
+FUNCTION: MeasureTextEx                    ( a a %f %f a -- )       \ Measure string size for Font : Font font, const char *text, float fontSize, float spacing
 FUNCTION: GetGlyphIndex                    ( a i -- i )             \ Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found : Font font, int codepoint
 FUNCTION: GetGlyphInfo                     ( a i a -- )             \ Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found : Font font, int codepoint
 FUNCTION: GetGlyphAtlasRec                 ( a i a -- )             \ Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found : Font font, int codepoint
@@ -534,30 +534,30 @@ FUNCTION: TextToPascal                     ( a -- a )               \ Get Pascal
 FUNCTION: TextToSnake                      ( a -- a )               \ Get Snake case notation version of provided string : const char *text
 FUNCTION: TextToCamel                      ( a -- a )               \ Get Camel case notation version of provided string : const char *text
 FUNCTION: TextToInteger                    ( a -- i )               \ Get integer value from text : const char *text
-FUNCTION: TextToFloat                      ( a -- f )               \ Get float value from text : const char *text
+FUNCTION: TextToFloat                      ( a -- %f )              \ Get float value from text : const char *text
 
 \ Basic geometric 3D shapes drawing Module
 FUNCTION: DrawLine3D                       ( a a u -- )             \ Draw a line in 3D world space : Vector3 startPos, Vector3 endPos, Color color
 FUNCTION: DrawPoint3D                      ( a u -- )               \ Draw a point in 3D space, actually a small line : Vector3 position, Color color
-FUNCTION: DrawCircle3D                     ( a f a f u -- )         \ Draw a circle in 3D world space : Vector3 center, float radius, Vector3 rotationAxis, float rotationAngle, Color color
+FUNCTION: DrawCircle3D                     ( a %f a %f u -- )       \ Draw a circle in 3D world space : Vector3 center, float radius, Vector3 rotationAxis, float rotationAngle, Color color
 FUNCTION: DrawTriangle3D                   ( a a a u -- )           \ Draw a color-filled triangle (vertex in counter-clockwise order!) : Vector3 v1, Vector3 v2, Vector3 v3, Color color
 FUNCTION: DrawTriangleStrip3D              ( a i u -- )             \ Draw a triangle strip defined by points : const Vector3 *points, int pointCount, Color color
-FUNCTION: DrawCube                         ( a f f f u -- )         \ Draw cube : Vector3 position, float width, float height, float length, Color color
+FUNCTION: DrawCube                         ( a %f %f %f u -- )      \ Draw cube : Vector3 position, float width, float height, float length, Color color
 FUNCTION: DrawCubeV                        ( a a u -- )             \ Draw cube (Vector version) : Vector3 position, Vector3 size, Color color
-FUNCTION: DrawCubeWires                    ( a f f f u -- )         \ Draw cube wires : Vector3 position, float width, float height, float length, Color color
+FUNCTION: DrawCubeWires                    ( a %f %f %f u -- )      \ Draw cube wires : Vector3 position, float width, float height, float length, Color color
 FUNCTION: DrawCubeWiresV                   ( a a u -- )             \ Draw cube wires (Vector version) : Vector3 position, Vector3 size, Color color
-FUNCTION: DrawSphere                       ( a f u -- )             \ Draw sphere : Vector3 centerPos, float radius, Color color
-FUNCTION: DrawSphereEx                     ( a f i i u -- )         \ Draw sphere with extended parameters : Vector3 centerPos, float radius, int rings, int slices, Color color
-FUNCTION: DrawSphereWires                  ( a f i i u -- )         \ Draw sphere wires : Vector3 centerPos, float radius, int rings, int slices, Color color
-FUNCTION: DrawCylinder                     ( a f f f i u -- )       \ Draw a cylinder/cone : Vector3 position, float radiusTop, float radiusBottom, float height, int slices, Color color
-FUNCTION: DrawCylinderEx                   ( a a f f i u -- )       \ Draw a cylinder with base at startPos and top at endPos : Vector3 startPos, Vector3 endPos, float startRadius, float endRadius, int sides, Color color
-FUNCTION: DrawCylinderWires                ( a f f f i u -- )       \ Draw a cylinder/cone wires : Vector3 position, float radiusTop, float radiusBottom, float height, int slices, Color color
-FUNCTION: DrawCylinderWiresEx              ( a a f f i u -- )       \ Draw a cylinder wires with base at startPos and top at endPos : Vector3 startPos, Vector3 endPos, float startRadius, float endRadius, int sides, Color color
-FUNCTION: DrawCapsule                      ( a a f i i u -- )       \ Draw a capsule with the center of its sphere caps at startPos and endPos : Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color
-FUNCTION: DrawCapsuleWires                 ( a a f i i u -- )       \ Draw capsule wireframe with the center of its sphere caps at startPos and endPos : Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color
+FUNCTION: DrawSphere                       ( a %f u -- )            \ Draw sphere : Vector3 centerPos, float radius, Color color
+FUNCTION: DrawSphereEx                     ( a %f i i u -- )        \ Draw sphere with extended parameters : Vector3 centerPos, float radius, int rings, int slices, Color color
+FUNCTION: DrawSphereWires                  ( a %f i i u -- )        \ Draw sphere wires : Vector3 centerPos, float radius, int rings, int slices, Color color
+FUNCTION: DrawCylinder                     ( a %f %f %f i u -- )    \ Draw a cylinder/cone : Vector3 position, float radiusTop, float radiusBottom, float height, int slices, Color color
+FUNCTION: DrawCylinderEx                   ( a a %f %f i u -- )     \ Draw a cylinder with base at startPos and top at endPos : Vector3 startPos, Vector3 endPos, float startRadius, float endRadius, int sides, Color color
+FUNCTION: DrawCylinderWires                ( a %f %f %f i u -- )    \ Draw a cylinder/cone wires : Vector3 position, float radiusTop, float radiusBottom, float height, int slices, Color color
+FUNCTION: DrawCylinderWiresEx              ( a a %f %f i u -- )     \ Draw a cylinder wires with base at startPos and top at endPos : Vector3 startPos, Vector3 endPos, float startRadius, float endRadius, int sides, Color color
+FUNCTION: DrawCapsule                      ( a a %f i i u -- )      \ Draw a capsule with the center of its sphere caps at startPos and endPos : Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color
+FUNCTION: DrawCapsuleWires                 ( a a %f i i u -- )      \ Draw capsule wireframe with the center of its sphere caps at startPos and endPos : Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color
 FUNCTION: DrawPlane                        ( a a u -- )             \ Draw a plane XZ : Vector3 centerPos, Vector2 size, Color color
 FUNCTION: DrawRay                          ( a u -- )               \ Draw a ray line : Ray ray, Color color
-FUNCTION: DrawGrid                         ( i f -- )               \ Draw a grid (centered at (0, 0, 0)) : int slices, float spacing
+FUNCTION: DrawGrid                         ( i %f -- )              \ Draw a grid (centered at (0, 0, 0)) : int slices, float spacing
 
 \ Model management Module
 FUNCTION: LoadModel                        ( a a -- )               \ Load model from files (meshes and materials) : const char *fileName
@@ -567,16 +567,16 @@ FUNCTION: UnloadModel                      ( a -- )                 \ Unload mod
 FUNCTION: GetModelBoundingBox              ( a a -- )               \ Compute model bounding box limits (considers all meshes) : Model model
 
 \ Model drawing Module
-FUNCTION: DrawModel                        ( a a f u -- )           \ Draw a model (with texture if set) : Model model, Vector3 position, float scale, Color tint
-FUNCTION: DrawModelEx                      ( a a a f a u -- )       \ Draw a model with extended parameters : Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint
-FUNCTION: DrawModelWires                   ( a a f u -- )           \ Draw a model wires (with texture if set) : Model model, Vector3 position, float scale, Color tint
-FUNCTION: DrawModelWiresEx                 ( a a a f a u -- )       \ Draw a model wires (with texture if set) with extended parameters : Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint
-FUNCTION: DrawModelPoints                  ( a a f u -- )           \ Draw a model as points : Model model, Vector3 position, float scale, Color tint
-FUNCTION: DrawModelPointsEx                ( a a a f a u -- )       \ Draw a model as points with extended parameters : Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint
+FUNCTION: DrawModel                        ( a a %f u -- )          \ Draw a model (with texture if set) : Model model, Vector3 position, float scale, Color tint
+FUNCTION: DrawModelEx                      ( a a a %f a u -- )      \ Draw a model with extended parameters : Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint
+FUNCTION: DrawModelWires                   ( a a %f u -- )          \ Draw a model wires (with texture if set) : Model model, Vector3 position, float scale, Color tint
+FUNCTION: DrawModelWiresEx                 ( a a a %f a u -- )      \ Draw a model wires (with texture if set) with extended parameters : Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint
+FUNCTION: DrawModelPoints                  ( a a %f u -- )          \ Draw a model as points : Model model, Vector3 position, float scale, Color tint
+FUNCTION: DrawModelPointsEx                ( a a a %f a u -- )      \ Draw a model as points with extended parameters : Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint
 FUNCTION: DrawBoundingBox                  ( a u -- )               \ Draw bounding box (wires) : BoundingBox box, Color color
-FUNCTION: DrawBillboard                    ( a a a f u -- )         \ Draw a billboard texture : Camera camera, Texture2D texture, Vector3 position, float scale, Color tint
+FUNCTION: DrawBillboard                    ( a a a %f u -- )        \ Draw a billboard texture : Camera camera, Texture2D texture, Vector3 position, float scale, Color tint
 FUNCTION: DrawBillboardRec                 ( a a a a a u -- )       \ Draw a billboard texture defined by source : Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector2 size, Color tint
-FUNCTION: DrawBillboardPro                 ( a a a a a a a f u -- ) \ Draw a billboard texture defined by source and rotation : Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint
+FUNCTION: DrawBillboardPro                 ( a a a a a a a %f u -- ) \ Draw a billboard texture defined by source and rotation : Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint
 
 \ Mesh management Module
 FUNCTION: UploadMesh                       ( a i -- )               \ Upload mesh vertex data in GPU and provide VAO/VBO ids : Mesh *mesh, bool dynamic
@@ -590,15 +590,15 @@ FUNCTION: ExportMesh                       ( a a -- i )             \ Export mes
 FUNCTION: ExportMeshAsCode                 ( a a -- i )             \ Export mesh as code file (.h) defining multiple arrays of vertex attributes : Mesh mesh, const char *fileName
 
 \ Mesh generation Module
-FUNCTION: GenMeshPoly                      ( i f a -- )             \ Generate polygonal mesh : int sides, float radius
-FUNCTION: GenMeshPlane                     ( f f i i a -- )         \ Generate plane mesh (with subdivisions) : float width, float length, int resX, int resZ
-FUNCTION: GenMeshCube                      ( f f f a -- )           \ Generate cuboid mesh : float width, float height, float length
-FUNCTION: GenMeshSphere                    ( f i i a -- )           \ Generate sphere mesh (standard sphere) : float radius, int rings, int slices
-FUNCTION: GenMeshHemiSphere                ( f i i a -- )           \ Generate half-sphere mesh (no bottom cap) : float radius, int rings, int slices
-FUNCTION: GenMeshCylinder                  ( f f i a -- )           \ Generate cylinder mesh : float radius, float height, int slices
-FUNCTION: GenMeshCone                      ( f f i a -- )           \ Generate cone/pyramid mesh : float radius, float height, int slices
-FUNCTION: GenMeshTorus                     ( f f i i a -- )         \ Generate torus mesh : float radius, float size, int radSeg, int sides
-FUNCTION: GenMeshKnot                      ( f f i i a -- )         \ Generate trefoil knot mesh : float radius, float size, int radSeg, int sides
+FUNCTION: GenMeshPoly                      ( i %f a -- )            \ Generate polygonal mesh : int sides, float radius
+FUNCTION: GenMeshPlane                     ( %f %f i i a -- )       \ Generate plane mesh (with subdivisions) : float width, float length, int resX, int resZ
+FUNCTION: GenMeshCube                      ( %f %f %f a -- )        \ Generate cuboid mesh : float width, float height, float length
+FUNCTION: GenMeshSphere                    ( %f i i a -- )          \ Generate sphere mesh (standard sphere) : float radius, int rings, int slices
+FUNCTION: GenMeshHemiSphere                ( %f i i a -- )          \ Generate half-sphere mesh (no bottom cap) : float radius, int rings, int slices
+FUNCTION: GenMeshCylinder                  ( %f %f i a -- )         \ Generate cylinder mesh : float radius, float height, int slices
+FUNCTION: GenMeshCone                      ( %f %f i a -- )         \ Generate cone/pyramid mesh : float radius, float height, int slices
+FUNCTION: GenMeshTorus                     ( %f %f i i a -- )       \ Generate torus mesh : float radius, float size, int radSeg, int sides
+FUNCTION: GenMeshKnot                      ( %f %f i i a -- )       \ Generate trefoil knot mesh : float radius, float size, int radSeg, int sides
 FUNCTION: GenMeshHeightmap                 ( a a a -- )             \ Generate heightmap mesh from image data : Image heightmap, Vector3 size
 FUNCTION: GenMeshCubicmap                  ( a a a -- )             \ Generate cubes-based map mesh from image data : Image cubicmap, Vector3 cubeSize
 
@@ -619,10 +619,10 @@ FUNCTION: UnloadModelAnimations            ( a i -- )               \ Unload ani
 FUNCTION: IsModelAnimationValid            ( a a -- i )             \ Check model animation skeleton match : Model model, ModelAnimation anim
 
 \ Collision detection Module
-FUNCTION: CheckCollisionSpheres            ( a f a f -- i )         \ Check collision between two spheres : Vector3 center1, float radius1, Vector3 center2, float radius2
+FUNCTION: CheckCollisionSpheres            ( a %f a %f -- i )       \ Check collision between two spheres : Vector3 center1, float radius1, Vector3 center2, float radius2
 FUNCTION: CheckCollisionBoxes              ( a a -- i )             \ Check collision between two bounding boxes : BoundingBox box1, BoundingBox box2
-FUNCTION: CheckCollisionBoxSphere          ( a a f -- i )           \ Check collision between box and sphere : BoundingBox box, Vector3 center, float radius
-FUNCTION: GetRayCollisionSphere            ( a a f a -- )           \ Get collision info between ray and sphere : Ray ray, Vector3 center, float radius
+FUNCTION: CheckCollisionBoxSphere          ( a a %f -- i )          \ Check collision between box and sphere : BoundingBox box, Vector3 center, float radius
+FUNCTION: GetRayCollisionSphere            ( a a %f a -- )          \ Get collision info between ray and sphere : Ray ray, Vector3 center, float radius
 FUNCTION: GetRayCollisionBox               ( a a a -- )             \ Get collision info between ray and box : Ray ray, BoundingBox box
 FUNCTION: GetRayCollisionMesh              ( a a a a -- )           \ Get collision info between ray and mesh : Ray ray, Mesh mesh, Matrix transform
 FUNCTION: GetRayCollisionTriangle          ( a a a a a -- )         \ Get collision info between ray and triangle : Ray ray, Vector3 p1, Vector3 p2, Vector3 p3
@@ -632,8 +632,8 @@ FUNCTION: GetRayCollisionQuad              ( a a a a a a -- )       \ Get collis
 FUNCTION: InitAudioDevice                  ( -- )                   \ Initialize audio device and context : void
 FUNCTION: CloseAudioDevice                 ( -- )                   \ Close the audio device and context : void
 FUNCTION: IsAudioDeviceReady               ( -- i )                 \ Check if audio device has been initialized successfully : void
-FUNCTION: SetMasterVolume                  ( f -- )                 \ Set master volume (listener) : float volume
-FUNCTION: GetMasterVolume                  ( -- f )                 \ Get master volume (listener) : void
+FUNCTION: SetMasterVolume                  ( %f -- )                \ Set master volume (listener) : float volume
+FUNCTION: GetMasterVolume                  ( -- %f )                \ Get master volume (listener) : void
 
 \ Wave/Sound loading/unloading Module
 FUNCTION: LoadWave                         ( a a -- )               \ Load wave data from file : const char *fileName
@@ -656,9 +656,9 @@ FUNCTION: StopSound                        ( a -- )                 \ Stop playi
 FUNCTION: PauseSound                       ( a -- )                 \ Pause a sound : Sound sound
 FUNCTION: ResumeSound                      ( a -- )                 \ Resume a paused sound : Sound sound
 FUNCTION: IsSoundPlaying                   ( a -- i )               \ Check if a sound is currently playing : Sound sound
-FUNCTION: SetSoundVolume                   ( a f -- )               \ Set volume for a sound (1.0 is max level) : Sound sound, float volume
-FUNCTION: SetSoundPitch                    ( a f -- )               \ Set pitch for a sound (1.0 is base level) : Sound sound, float pitch
-FUNCTION: SetSoundPan                      ( a f -- )               \ Set pan for a sound (0.5 is center) : Sound sound, float pan
+FUNCTION: SetSoundVolume                   ( a %f -- )              \ Set volume for a sound (1.0 is max level) : Sound sound, float volume
+FUNCTION: SetSoundPitch                    ( a %f -- )              \ Set pitch for a sound (1.0 is base level) : Sound sound, float pitch
+FUNCTION: SetSoundPan                      ( a %f -- )              \ Set pan for a sound (0.5 is center) : Sound sound, float pan
 FUNCTION: WaveCopy                         ( a a -- )               \ Copy a wave to a new wave : Wave wave
 FUNCTION: WaveCrop                         ( a i i -- )             \ Crop a wave to defined frames range : Wave *wave, int initFrame, int finalFrame
 FUNCTION: WaveFormat                       ( a i i i -- )           \ Convert wave data to desired format : Wave *wave, int sampleRate, int sampleSize, int channels
@@ -676,12 +676,12 @@ FUNCTION: UpdateMusicStream                ( a -- )                 \ Updates bu
 FUNCTION: StopMusicStream                  ( a -- )                 \ Stop music playing : Music music
 FUNCTION: PauseMusicStream                 ( a -- )                 \ Pause music playing : Music music
 FUNCTION: ResumeMusicStream                ( a -- )                 \ Resume playing paused music : Music music
-FUNCTION: SeekMusicStream                  ( a f -- )               \ Seek music to a position (in seconds) : Music music, float position
-FUNCTION: SetMusicVolume                   ( a f -- )               \ Set volume for music (1.0 is max level) : Music music, float volume
-FUNCTION: SetMusicPitch                    ( a f -- )               \ Set pitch for a music (1.0 is base level) : Music music, float pitch
-FUNCTION: SetMusicPan                      ( a f -- )               \ Set pan for a music (0.5 is center) : Music music, float pan
-FUNCTION: GetMusicTimeLength               ( a -- f )               \ Get music time length (in seconds) : Music music
-FUNCTION: GetMusicTimePlayed               ( a -- f )               \ Get current music time played (in seconds) : Music music
+FUNCTION: SeekMusicStream                  ( a %f -- )              \ Seek music to a position (in seconds) : Music music, float position
+FUNCTION: SetMusicVolume                   ( a %f -- )              \ Set volume for music (1.0 is max level) : Music music, float volume
+FUNCTION: SetMusicPitch                    ( a %f -- )              \ Set pitch for a music (1.0 is base level) : Music music, float pitch
+FUNCTION: SetMusicPan                      ( a %f -- )              \ Set pan for a music (0.5 is center) : Music music, float pan
+FUNCTION: GetMusicTimeLength               ( a -- %f )              \ Get music time length (in seconds) : Music music
+FUNCTION: GetMusicTimePlayed               ( a -- %f )              \ Get current music time played (in seconds) : Music music
 
 \ AudioStream management Module
 FUNCTION: LoadAudioStream                  ( u u u a -- )           \ Load audio stream (to stream raw audio pcm data) : unsigned int sampleRate, unsigned int sampleSize, unsigned int channels
@@ -694,9 +694,9 @@ FUNCTION: PauseAudioStream                 ( a -- )                 \ Pause audi
 FUNCTION: ResumeAudioStream                ( a -- )                 \ Resume audio stream : AudioStream stream
 FUNCTION: IsAudioStreamPlaying             ( a -- i )               \ Check if audio stream is playing : AudioStream stream
 FUNCTION: StopAudioStream                  ( a -- )                 \ Stop audio stream : AudioStream stream
-FUNCTION: SetAudioStreamVolume             ( a f -- )               \ Set volume for audio stream (1.0 is max level) : AudioStream stream, float volume
-FUNCTION: SetAudioStreamPitch              ( a f -- )               \ Set pitch for audio stream (1.0 is base level) : AudioStream stream, float pitch
-FUNCTION: SetAudioStreamPan                ( a f -- )               \ Set pan for audio stream (0.5 is centered) : AudioStream stream, float pan
+FUNCTION: SetAudioStreamVolume             ( a %f -- )              \ Set volume for audio stream (1.0 is max level) : AudioStream stream, float volume
+FUNCTION: SetAudioStreamPitch              ( a %f -- )              \ Set pitch for audio stream (1.0 is base level) : AudioStream stream, float pitch
+FUNCTION: SetAudioStreamPan                ( a %f -- )              \ Set pan for audio stream (0.5 is centered) : AudioStream stream, float pan
 FUNCTION: SetAudioStreamBufferSizeDefault  ( i -- )                 \ Default size for new audio streams : int size
 FUNCTION: SetAudioStreamCallback           ( a a -- )               \ Audio thread callback to request new data : AudioStream stream, AudioCallback callback
 FUNCTION: AttachAudioStreamProcessor       ( a a -- )               \ Attach audio stream processor to stream, receives frames x 2 samples as 'float' (stereo) : AudioStream stream, AudioCallback processor
