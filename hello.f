@@ -5,7 +5,7 @@ include raylib.f
 
 $ff000000 constant black
 $ffffffff constant white
-: hello z" hello world" dup . ;
+: hello z" hello world" ;
 
 : scene
 	BeginDrawing
