@@ -1,7 +1,7 @@
 SwiftForth bindings for Raylib
 ------------------------------
 
-This is an experimental binding for [raylib](https://github.com/raysan5/raylib) to the SwiftForth FFI.
+This is an experimental binding for [raylib](https://github.com/raysan5/raylib) to the [SwiftForth](https://www.forth.com/swiftforth/) FFI.
 
 The implementation is via a quick and dirty ruby script that takes the 597 RLAPI functions and exports
 them via the SwiftForth FUNCTION: defining word.  I have tried to preserve the original comments and
