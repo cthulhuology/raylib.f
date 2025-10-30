@@ -47,6 +47,7 @@ def map_type(t)
 	  "AutomationEvent *" => "a",
 	  "Matrix *" => "a",
 	  # Structs default to "a", special case Color as "u"
+          "Font" => "a",
 	  "Color" => "u"
 	}
 	nt = normalize_type(t)
@@ -69,8 +70,9 @@ input_file = ARGV[0] || "raylib.h"
 output_file = "raylib.f"
 
 File.open(output_file, "w") do |out|
+  out.puts "PACKAGE raylib"
   out.puts "LIBRARY raylib  \\ Loads libraylib.so or raylib.dll or equivalent"
-  out.puts
+  out.puts "PRIVATE"
 
   current_section = nil
 
@@ -87,11 +89,13 @@ File.open(output_file, "w") do |out|
 
     # Match RLAPI function declarations
     if line.start_with?('RLAPI')
-      if match = line.match(/RLAPI\s+(.+?)\s*([A-Z][\w]+)\((.*?)\);\s*(\/\/\s*(.*))?/)
+      if match = line.match(/RLAPI\s+(.+?)\s*?([A-Z][\w]+)\((.*?)\);\s*(\/\/\s*(.*))?/)
         return_type = match[1].strip
         name = match[2]
         params_str = match[3].strip
         comment = match[5] || "No preceding comment for #{name}"
+
+	puts "#{params_str} #{name} -- #{return_type}"
 
         # Parse params, ignore varargs '...'
         params = if params_str == 'void' || params_str.empty?
@@ -112,13 +116,15 @@ File.open(output_file, "w") do |out|
           if return_type == 'Color'
             stack_return = 'u'
           else
-            # Add 'a' for storage pointer
-            stack_params = [stack_params, 'a'].reject(&:empty?).join(' ')
-            stack_return = ''
+            stack_params = [stack_params].reject(&:empty?).join(' ')
+            stack_return = 'a'
           end
         else
           stack_return = map_type(return_type)
         end
+
+	puts "#{name} #{stack_return}"
+	puts "#{name} #{stack_params}"
 
         # Build stack comment
         stack = if stack_params.empty? && stack_return.empty?
@@ -132,12 +138,16 @@ File.open(output_file, "w") do |out|
                 end
 
         # Output
+        puts "FUNCTION: %-32s %-24s \\ %s : %s" % [name,stack, comment,params_str ]
         out.puts "FUNCTION: %-32s %-24s \\ %s : %s" % [name,stack, comment,params_str ]
       else
        puts "Failed to parse #{line}"
       end
     end
   end
+  out.puts "PUBLIC"
+  out.puts ": /raylib raylib +order ;"
+  out.puts "END-PACKAGE"
 end
 
 puts "Generated #{output_file}"

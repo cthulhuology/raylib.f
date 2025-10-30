@@ -1,5 +1,6 @@
+PACKAGE raylib
 LIBRARY raylib  \ Loads libraylib.so or raylib.dll or equivalent
-
+PRIVATE
 
 \ Callbacks to hook some internal Module
 
@@ -21,7 +22,7 @@ FUNCTION: ToggleFullscreen                 ( -- )                   \ Toggle win
 FUNCTION: ToggleBorderlessWindowed         ( -- )                   \ Toggle window state: borderless windowed, resizes window to match monitor resolution : void
 FUNCTION: MaximizeWindow                   ( -- )                   \ Set window state: maximized, if resizable : void
 FUNCTION: MinimizeWindow                   ( -- )                   \ Set window state: minimized, if resizable : void
-FUNCTION: RestoreWindow                    ( -- )                   \ Restore window from being minimized/maximized : void
+FUNCTION: RestoreWindow                    ( -- )                   \ Set window state: not minimized/maximized : void
 FUNCTION: SetWindowIcon                    ( a -- )                 \ Set icon for window (single image, RGBA 32bit) : Image image
 FUNCTION: SetWindowIcons                   ( a i -- )               \ Set icon for window (multiple images, RGBA 32bit) : Image *images, int count
 FUNCTION: SetWindowTitle                   ( a -- )                 \ Set title for window : const char *title
@@ -39,18 +40,18 @@ FUNCTION: GetRenderWidth                   ( -- i )                 \ Get curren
 FUNCTION: GetRenderHeight                  ( -- i )                 \ Get current render height (it considers HiDPI) : void
 FUNCTION: GetMonitorCount                  ( -- i )                 \ Get number of connected monitors : void
 FUNCTION: GetCurrentMonitor                ( -- i )                 \ Get current monitor where window is placed : void
-FUNCTION: GetMonitorPosition               ( i a -- )               \ Get specified monitor position : int monitor
+FUNCTION: GetMonitorPosition               ( i -- a )               \ Get specified monitor position : int monitor
 FUNCTION: GetMonitorWidth                  ( i -- i )               \ Get specified monitor width (current video mode used by monitor) : int monitor
 FUNCTION: GetMonitorHeight                 ( i -- i )               \ Get specified monitor height (current video mode used by monitor) : int monitor
 FUNCTION: GetMonitorPhysicalWidth          ( i -- i )               \ Get specified monitor physical width in millimetres : int monitor
 FUNCTION: GetMonitorPhysicalHeight         ( i -- i )               \ Get specified monitor physical height in millimetres : int monitor
 FUNCTION: GetMonitorRefreshRate            ( i -- i )               \ Get specified monitor refresh rate : int monitor
-FUNCTION: GetWindowPosition                ( a -- )                 \ Get window position XY on monitor : void
-FUNCTION: GetWindowScaleDPI                ( a -- )                 \ Get window scale DPI factor : void
+FUNCTION: GetWindowPosition                ( -- a )                 \ Get window position XY on monitor : void
+FUNCTION: GetWindowScaleDPI                ( -- a )                 \ Get window scale DPI factor : void
 FUNCTION: GetMonitorName                   ( i -- a )               \ Get the human-readable, UTF-8 encoded name of the specified monitor : int monitor
 FUNCTION: SetClipboardText                 ( a -- )                 \ Set clipboard text content : const char *text
 FUNCTION: GetClipboardText                 ( -- a )                 \ Get clipboard text content : void
-FUNCTION: GetClipboardImage                ( a -- )                 \ Get clipboard image content : void
+FUNCTION: GetClipboardImage                ( -- a )                 \ Get clipboard image content : void
 FUNCTION: EnableEventWaiting               ( -- )                   \ Enable waiting for events on EndDrawing(), no automatic event polling : void
 FUNCTION: DisableEventWaiting              ( -- )                   \ Disable waiting for events on EndDrawing(), automatic events polling : void
 
@@ -82,30 +83,30 @@ FUNCTION: BeginVrStereoMode                ( a -- )                 \ Begin ster
 FUNCTION: EndVrStereoMode                  ( -- )                   \ End stereo rendering (requires VR simulator) : void
 
 \ VR stereo config Module for VR simulator
-FUNCTION: LoadVrStereoConfig               ( a a -- )               \ Load VR stereo config for VR simulator device parameters : VrDeviceInfo device
+FUNCTION: LoadVrStereoConfig               ( a -- a )               \ Load VR stereo config for VR simulator device parameters : VrDeviceInfo device
 FUNCTION: UnloadVrStereoConfig             ( a -- )                 \ Unload VR stereo config : VrStereoConfig config
 
 \ Shader management Module
-FUNCTION: LoadShader                       ( a a a -- )             \ Load shader from files and bind default locations : const char *vsFileName, const char *fsFileName
-FUNCTION: LoadShaderFromMemory             ( a a a -- )             \ Load shader from code strings and bind default locations : const char *vsCode, const char *fsCode
+FUNCTION: LoadShader                       ( a a -- a )             \ Load shader from files and bind default locations : const char *vsFileName, const char *fsFileName
+FUNCTION: LoadShaderFromMemory             ( a a -- a )             \ Load shader from code strings and bind default locations : const char *vsCode, const char *fsCode
 FUNCTION: IsShaderValid                    ( a -- i )               \ Check if a shader is valid (loaded on GPU) : Shader shader
 FUNCTION: GetShaderLocation                ( a a -- i )             \ Get shader uniform location : Shader shader, const char *uniformName
 FUNCTION: GetShaderLocationAttrib          ( a a -- i )             \ Get shader attribute location : Shader shader, const char *attribName
 FUNCTION: SetShaderValue                   ( a i a i -- )           \ Set shader uniform value : Shader shader, int locIndex, const void *value, int uniformType
 FUNCTION: SetShaderValueV                  ( a i a i i -- )         \ Set shader uniform value vector : Shader shader, int locIndex, const void *value, int uniformType, int count
 FUNCTION: SetShaderValueMatrix             ( a i a -- )             \ Set shader uniform value (matrix 4x4) : Shader shader, int locIndex, Matrix mat
-FUNCTION: SetShaderValueTexture            ( a i a -- )             \ Set shader uniform value and bind the texture (sampler2d) : Shader shader, int locIndex, Texture2D texture
+FUNCTION: SetShaderValueTexture            ( a i a -- )             \ Set shader uniform value for texture (sampler2d) : Shader shader, int locIndex, Texture2D texture
 FUNCTION: UnloadShader                     ( a -- )                 \ Unload shader from GPU memory (VRAM) : Shader shader
 
 \ Screen-space-related Module
-FUNCTION: GetScreenToWorldRay              ( a a a -- )             \ Get a ray trace from screen position (i.e mouse) : Vector2 position, Camera camera
-FUNCTION: GetScreenToWorldRayEx            ( a a i i a -- )         \ Get a ray trace from screen position (i.e mouse) in a viewport : Vector2 position, Camera camera, int width, int height
-FUNCTION: GetWorldToScreen                 ( a a a -- )             \ Get the screen space position for a 3d world space position : Vector3 position, Camera camera
-FUNCTION: GetWorldToScreenEx               ( a a i i a -- )         \ Get size position for a 3d world space position : Vector3 position, Camera camera, int width, int height
-FUNCTION: GetWorldToScreen2D               ( a a a -- )             \ Get the screen space position for a 2d camera world space position : Vector2 position, Camera2D camera
-FUNCTION: GetScreenToWorld2D               ( a a a -- )             \ Get the world space position for a 2d camera screen space position : Vector2 position, Camera2D camera
-FUNCTION: GetCameraMatrix                  ( a a -- )               \ Get camera transform matrix (view matrix) : Camera camera
-FUNCTION: GetCameraMatrix2D                ( a a -- )               \ Get camera 2d transform matrix : Camera2D camera
+FUNCTION: GetScreenToWorldRay              ( a a -- a )             \ Get a ray trace from screen position (i.e mouse) : Vector2 position, Camera camera
+FUNCTION: GetScreenToWorldRayEx            ( a a i i -- a )         \ Get a ray trace from screen position (i.e mouse) in a viewport : Vector2 position, Camera camera, int width, int height
+FUNCTION: GetWorldToScreen                 ( a a -- a )             \ Get the screen space position for a 3d world space position : Vector3 position, Camera camera
+FUNCTION: GetWorldToScreenEx               ( a a i i -- a )         \ Get size position for a 3d world space position : Vector3 position, Camera camera, int width, int height
+FUNCTION: GetWorldToScreen2D               ( a a -- a )             \ Get the screen space position for a 2d camera world space position : Vector2 position, Camera2D camera
+FUNCTION: GetScreenToWorld2D               ( a a -- a )             \ Get the world space position for a 2d camera screen space position : Vector2 position, Camera2D camera
+FUNCTION: GetCameraMatrix                  ( a -- a )               \ Get camera transform matrix (view matrix) : Camera camera
+FUNCTION: GetCameraMatrix2D                ( a -- a )               \ Get camera 2d transform matrix : Camera2D camera
 
 \ Timing-related Module
 FUNCTION: SetTargetFPS                     ( i -- )                 \ Set target FPS (maximum) : int fps
@@ -150,20 +151,13 @@ FUNCTION: SaveFileData                     ( a a i -- i )           \ Save data 
 FUNCTION: ExportDataAsCode                 ( a i a -- i )           \ Export data to code (.h), returns true on success : const unsigned char *data, int dataSize, const char *fileName
 FUNCTION: LoadFileText                     ( a -- a )               \ Load text data from file (read), returns a '\0' terminated string : const char *fileName
 FUNCTION: UnloadFileText                   ( a -- )                 \ Unload file text data allocated by LoadFileText() : char *text
-FUNCTION: SaveFileText                     ( a a -- i )             \ Save text data to file (write), string must be '\0' terminated, returns true on success : const char *fileName, const char *text
+FUNCTION: SaveFileText                     ( a a -- i )             \ Save text data to file (write), string must be '\0' terminated, returns true on success : const char *fileName, char *text
 
 \ File system Module
-FUNCTION: FileRename                       ( a a -- i )             \ Rename file (if exists) : const char *fileName, const char *fileRename
-FUNCTION: FileRemove                       ( a -- i )               \ Remove file (if exists) : const char *fileName
-FUNCTION: FileCopy                         ( a a -- i )             \ Copy file from one path to another, dstPath created if it doesn't exist : const char *srcPath, const char *dstPath
-FUNCTION: FileMove                         ( a a -- i )             \ Move file from one directory to another, dstPath created if it doesn't exist : const char *srcPath, const char *dstPath
-FUNCTION: FileTextReplace                  ( a a a -- i )           \ Replace text in an existing file : const char *fileName, const char *search, const char *replacement
-FUNCTION: FileTextFindIndex                ( a a -- i )             \ Find text in existing file : const char *fileName, const char *search
 FUNCTION: FileExists                       ( a -- i )               \ Check if file exists : const char *fileName
 FUNCTION: DirectoryExists                  ( a -- i )               \ Check if a directory path exists : const char *dirPath
-FUNCTION: IsFileExtension                  ( a a -- i )             \ Check file extension (recommended include point: .png, .wav) : const char *fileName, const char *ext
+FUNCTION: IsFileExtension                  ( a a -- i )             \ Check file extension (including point: .png, .wav) : const char *fileName, const char *ext
 FUNCTION: GetFileLength                    ( a -- i )               \ Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h) : const char *fileName
-FUNCTION: GetFileModTime                   ( a -- a )               \ Get file modification time (last write time) : const char *fileName
 FUNCTION: GetFileExtension                 ( a -- a )               \ Get pointer to extension for a filename string (includes dot: '.png') : const char *fileName
 FUNCTION: GetFileName                      ( a -- a )               \ Get pointer to filename for a path string : const char *filePath
 FUNCTION: GetFileNameWithoutExt            ( a -- a )               \ Get filename string without extension (uses static string) : const char *filePath
@@ -175,21 +169,21 @@ FUNCTION: MakeDirectory                    ( a -- i )               \ Create dir
 FUNCTION: ChangeDirectory                  ( a -- i )               \ Change working directory, return true on success : const char *dir
 FUNCTION: IsPathFile                       ( a -- i )               \ Check if a given path is a file or a directory : const char *path
 FUNCTION: IsFileNameValid                  ( a -- i )               \ Check if fileName is valid for the platform/OS : const char *fileName
-FUNCTION: LoadDirectoryFiles               ( a a -- )               \ Load directory filepaths : const char *dirPath
-FUNCTION: LoadDirectoryFilesEx             ( a a i a -- )           \ Load directory filepaths with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result : const char *basePath, const char *filter, bool scanSubdirs
+FUNCTION: LoadDirectoryFiles               ( a -- a )               \ Load directory filepaths : const char *dirPath
+FUNCTION: LoadDirectoryFilesEx             ( a a i -- a )           \ Load directory filepaths with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result : const char *basePath, const char *filter, bool scanSubdirs
 FUNCTION: UnloadDirectoryFiles             ( a -- )                 \ Unload filepaths : FilePathList files
 FUNCTION: IsFileDropped                    ( -- i )                 \ Check if a file has been dropped into window : void
-FUNCTION: LoadDroppedFiles                 ( a -- )                 \ Load dropped filepaths : void
+FUNCTION: LoadDroppedFiles                 ( -- a )                 \ Load dropped filepaths : void
 FUNCTION: UnloadDroppedFiles               ( a -- )                 \ Unload dropped filepaths : FilePathList files
+FUNCTION: GetFileModTime                   ( a -- a )               \ Get file modification time (last write time) : const char *fileName
 FUNCTION: CompressData                     ( a i a -- a )           \ Compress data (DEFLATE algorithm), memory must be MemFree() : const unsigned char *data, int dataSize, int *compDataSize
 FUNCTION: DecompressData                   ( a i a -- a )           \ Decompress data (DEFLATE algorithm), memory must be MemFree() : const unsigned char *compData, int compDataSize, int *dataSize
-FUNCTION: EncodeDataBase64                 ( a i a -- a )           \ Encode data to Base64 string (includes NULL terminator), memory must be MemFree() : const unsigned char *data, int dataSize, int *outputSize
-FUNCTION: DecodeDataBase64                 ( a a -- a )             \ Decode Base64 string (expected NULL terminated), memory must be MemFree() : const char *text, int *outputSize
+FUNCTION: EncodeDataBase64                 ( a i a -- a )           \ Encode data to Base64 string, memory must be MemFree() : const unsigned char *data, int dataSize, int *outputSize
+FUNCTION: DecodeDataBase64                 ( a a -- a )             \ Decode Base64 string data, memory must be MemFree() : const unsigned char *data, int *outputSize
 FUNCTION: ComputeCRC32                     ( a i -- u )             \ Compute CRC32 hash code : unsigned char *data, int dataSize
 FUNCTION: ComputeMD5                       ( a i -- a )             \ Compute MD5 hash code, returns static int[4] (16 bytes) : unsigned char *data, int dataSize
 FUNCTION: ComputeSHA1                      ( a i -- a )             \ Compute SHA1 hash code, returns static int[5] (20 bytes) : unsigned char *data, int dataSize
-FUNCTION: ComputeSHA256                    ( a i -- a )             \ Compute SHA256 hash code, returns static int[8] (32 bytes) : unsigned char *data, int dataSize
-FUNCTION: LoadAutomationEventList          ( a a -- )               \ Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS : const char *fileName
+FUNCTION: LoadAutomationEventList          ( a -- a )               \ Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS : const char *fileName
 FUNCTION: UnloadAutomationEventList        ( a -- )                 \ Unload automation events list from file : AutomationEventList list
 FUNCTION: ExportAutomationEventList        ( a a -- i )             \ Export automation events list as text file : AutomationEventList list, const char *fileName
 FUNCTION: SetAutomationEventList           ( a -- )                 \ Set automation event list to record to : AutomationEventList *list
@@ -206,7 +200,6 @@ FUNCTION: IsKeyReleased                    ( i -- i )               \ Check if a
 FUNCTION: IsKeyUp                          ( i -- i )               \ Check if a key is NOT being pressed : int key
 FUNCTION: GetKeyPressed                    ( -- i )                 \ Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty : void
 FUNCTION: GetCharPressed                   ( -- i )                 \ Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty : void
-FUNCTION: GetKeyName                       ( i -- a )               \ Get name of a QWERTY key on the current keyboard layout (eg returns string 'q' for KEY_A on an AZERTY keyboard) : int key
 FUNCTION: SetExitKey                       ( i -- )                 \ Set a custom key to exit program (default is ESC) : int key
 
 \ Input-related Module: gamepads
@@ -217,8 +210,8 @@ FUNCTION: IsGamepadButtonDown              ( i i -- i )             \ Check if a
 FUNCTION: IsGamepadButtonReleased          ( i i -- i )             \ Check if a gamepad button has been released once : int gamepad, int button
 FUNCTION: IsGamepadButtonUp                ( i i -- i )             \ Check if a gamepad button is NOT being pressed : int gamepad, int button
 FUNCTION: GetGamepadButtonPressed          ( -- i )                 \ Get the last gamepad button pressed : void
-FUNCTION: GetGamepadAxisCount              ( i -- i )               \ Get axis count for a gamepad : int gamepad
-FUNCTION: GetGamepadAxisMovement           ( i i -- %f )            \ Get movement value for a gamepad axis : int gamepad, int axis
+FUNCTION: GetGamepadAxisCount              ( i -- i )               \ Get gamepad axis count for a gamepad : int gamepad
+FUNCTION: GetGamepadAxisMovement           ( i i -- %f )            \ Get axis movement value for a gamepad axis : int gamepad, int axis
 FUNCTION: SetGamepadMappings               ( a -- i )               \ Set internal gamepad mappings (SDL_GameControllerDB) : const char *mappings
 FUNCTION: SetGamepadVibration              ( i %f %f %f -- )        \ Set gamepad vibration for both motors (duration in seconds) : int gamepad, float leftMotor, float rightMotor, float duration
 
@@ -229,34 +222,34 @@ FUNCTION: IsMouseButtonReleased            ( i -- i )               \ Check if a
 FUNCTION: IsMouseButtonUp                  ( i -- i )               \ Check if a mouse button is NOT being pressed : int button
 FUNCTION: GetMouseX                        ( -- i )                 \ Get mouse position X : void
 FUNCTION: GetMouseY                        ( -- i )                 \ Get mouse position Y : void
-FUNCTION: GetMousePosition                 ( a -- )                 \ Get mouse position XY : void
-FUNCTION: GetMouseDelta                    ( a -- )                 \ Get mouse delta between frames : void
+FUNCTION: GetMousePosition                 ( -- a )                 \ Get mouse position XY : void
+FUNCTION: GetMouseDelta                    ( -- a )                 \ Get mouse delta between frames : void
 FUNCTION: SetMousePosition                 ( i i -- )               \ Set mouse position XY : int x, int y
 FUNCTION: SetMouseOffset                   ( i i -- )               \ Set mouse offset : int offsetX, int offsetY
 FUNCTION: SetMouseScale                    ( %f %f -- )             \ Set mouse scaling : float scaleX, float scaleY
 FUNCTION: GetMouseWheelMove                ( -- %f )                \ Get mouse wheel movement for X or Y, whichever is larger : void
-FUNCTION: GetMouseWheelMoveV               ( a -- )                 \ Get mouse wheel movement for both X and Y : void
+FUNCTION: GetMouseWheelMoveV               ( -- a )                 \ Get mouse wheel movement for both X and Y : void
 FUNCTION: SetMouseCursor                   ( i -- )                 \ Set mouse cursor : int cursor
 
 \ Input-related Module: touch
 FUNCTION: GetTouchX                        ( -- i )                 \ Get touch position X for touch point 0 (relative to screen size) : void
 FUNCTION: GetTouchY                        ( -- i )                 \ Get touch position Y for touch point 0 (relative to screen size) : void
-FUNCTION: GetTouchPosition                 ( i a -- )               \ Get touch position XY for a touch point index (relative to screen size) : int index
+FUNCTION: GetTouchPosition                 ( i -- a )               \ Get touch position XY for a touch point index (relative to screen size) : int index
 FUNCTION: GetTouchPointId                  ( i -- i )               \ Get touch point identifier for given index : int index
 FUNCTION: GetTouchPointCount               ( -- i )                 \ Get number of touch points : void
 FUNCTION: SetGesturesEnabled               ( u -- )                 \ Enable a set of gestures using flags : unsigned int flags
 FUNCTION: IsGestureDetected                ( u -- i )               \ Check if a gesture have been detected : unsigned int gesture
 FUNCTION: GetGestureDetected               ( -- i )                 \ Get latest detected gesture : void
 FUNCTION: GetGestureHoldDuration           ( -- %f )                \ Get gesture hold time in seconds : void
-FUNCTION: GetGestureDragVector             ( a -- )                 \ Get gesture drag vector : void
+FUNCTION: GetGestureDragVector             ( -- a )                 \ Get gesture drag vector : void
 FUNCTION: GetGestureDragAngle              ( -- %f )                \ Get gesture drag angle : void
-FUNCTION: GetGesturePinchVector            ( a -- )                 \ Get gesture pinch delta : void
+FUNCTION: GetGesturePinchVector            ( -- a )                 \ Get gesture pinch delta : void
 FUNCTION: GetGesturePinchAngle             ( -- %f )                \ Get gesture pinch angle : void
 FUNCTION: UpdateCamera                     ( a i -- )               \ Update camera position for selected mode : Camera *camera, int mode
 FUNCTION: UpdateCameraPro                  ( a a a %f -- )          \ Update camera movement/rotation : Camera *camera, Vector3 movement, Vector3 rotation, float zoom
 FUNCTION: SetShapesTexture                 ( a a -- )               \ Set texture and rectangle to be used on shapes drawing : Texture2D texture, Rectangle source
-FUNCTION: GetShapesTexture                 ( a -- )                 \ Get texture that is used for shapes drawing : void
-FUNCTION: GetShapesTextureRectangle        ( a -- )                 \ Get texture source rectangle that is used for shapes drawing : void
+FUNCTION: GetShapesTexture                 ( -- a )                 \ Get texture that is used for shapes drawing : void
+FUNCTION: GetShapesTextureRectangle        ( -- a )                 \ Get texture source rectangle that is used for shapes drawing : void
 
 \ Basic shapes drawing Module
 FUNCTION: DrawPixel                        ( i i u -- )             \ Draw a pixel using geometry [Can be slow, use with care] : int posX, int posY, Color color
@@ -266,7 +259,6 @@ FUNCTION: DrawLineV                        ( a a u -- )             \ Draw a lin
 FUNCTION: DrawLineEx                       ( a a %f u -- )          \ Draw a line (using triangles/quads) : Vector2 startPos, Vector2 endPos, float thick, Color color
 FUNCTION: DrawLineStrip                    ( a i u -- )             \ Draw lines sequence (using gl lines) : const Vector2 *points, int pointCount, Color color
 FUNCTION: DrawLineBezier                   ( a a %f u -- )          \ Draw line segment cubic-bezier in-out interpolation : Vector2 startPos, Vector2 endPos, float thick, Color color
-FUNCTION: DrawLineDashed                   ( a a i i u -- )         \ Draw a dashed line : Vector2 startPos, Vector2 endPos, int dashSize, int spaceSize, Color color
 FUNCTION: DrawCircle                       ( i i %f u -- )          \ Draw a color-filled circle : int centerX, int centerY, float radius, Color color
 FUNCTION: DrawCircleSector                 ( a %f %f %f i u -- )    \ Draw a piece of a circle : Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color
 FUNCTION: DrawCircleSectorLines            ( a %f %f %f i u -- )    \ Draw circle sector outline : Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color
@@ -275,9 +267,7 @@ FUNCTION: DrawCircleV                      ( a %f u -- )            \ Draw a col
 FUNCTION: DrawCircleLines                  ( i i %f u -- )          \ Draw circle outline : int centerX, int centerY, float radius, Color color
 FUNCTION: DrawCircleLinesV                 ( a %f u -- )            \ Draw circle outline (Vector version) : Vector2 center, float radius, Color color
 FUNCTION: DrawEllipse                      ( i i %f %f u -- )       \ Draw ellipse : int centerX, int centerY, float radiusH, float radiusV, Color color
-FUNCTION: DrawEllipseV                     ( a %f %f u -- )         \ Draw ellipse (Vector version) : Vector2 center, float radiusH, float radiusV, Color color
 FUNCTION: DrawEllipseLines                 ( i i %f %f u -- )       \ Draw ellipse outline : int centerX, int centerY, float radiusH, float radiusV, Color color
-FUNCTION: DrawEllipseLinesV                ( a %f %f u -- )         \ Draw ellipse outline (Vector version) : Vector2 center, float radiusH, float radiusV, Color color
 FUNCTION: DrawRing                         ( a %f %f %f %f i u -- ) \ Draw ring : Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color
 FUNCTION: DrawRingLines                    ( a %f %f %f %f i u -- ) \ Draw ring outline : Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color
 FUNCTION: DrawRectangle                    ( i i i i u -- )         \ Draw a color-filled rectangle : int posX, int posY, int width, int height, Color color
@@ -286,7 +276,7 @@ FUNCTION: DrawRectangleRec                 ( a u -- )               \ Draw a col
 FUNCTION: DrawRectanglePro                 ( a a %f u -- )          \ Draw a color-filled rectangle with pro parameters : Rectangle rec, Vector2 origin, float rotation, Color color
 FUNCTION: DrawRectangleGradientV           ( i i i i u u -- )       \ Draw a vertical-gradient-filled rectangle : int posX, int posY, int width, int height, Color top, Color bottom
 FUNCTION: DrawRectangleGradientH           ( i i i i u u -- )       \ Draw a horizontal-gradient-filled rectangle : int posX, int posY, int width, int height, Color left, Color right
-FUNCTION: DrawRectangleGradientEx          ( a u u u u -- )         \ Draw a gradient-filled rectangle with custom vertex colors : Rectangle rec, Color topLeft, Color bottomLeft, Color bottomRight, Color topRight
+FUNCTION: DrawRectangleGradientEx          ( a u u u u -- )         \ Draw a gradient-filled rectangle with custom vertex colors : Rectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight
 FUNCTION: DrawRectangleLines               ( i i i i u -- )         \ Draw rectangle outline : int posX, int posY, int width, int height, Color color
 FUNCTION: DrawRectangleLinesEx             ( a %f u -- )            \ Draw rectangle outline with extended parameters : Rectangle rec, float lineThick, Color color
 FUNCTION: DrawRectangleRounded             ( a %f i u -- )          \ Draw rectangle with rounded edges : Rectangle rec, float roundness, int segments, Color color
@@ -313,11 +303,11 @@ FUNCTION: DrawSplineSegmentBezierQuadratic ( a a a %f u -- )        \ Draw splin
 FUNCTION: DrawSplineSegmentBezierCubic     ( a a a a %f u -- )      \ Draw spline segment: Cubic Bezier, 2 points, 2 control points : Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float thick, Color color
 
 \ Spline segment point evaluation Module, for a given t [0.0f .. 1.0f]
-FUNCTION: GetSplinePointLinear             ( a a %f a -- )          \ Get (evaluate) spline point: Linear : Vector2 startPos, Vector2 endPos, float t
-FUNCTION: GetSplinePointBasis              ( a a a a %f a -- )      \ Get (evaluate) spline point: B-Spline : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t
-FUNCTION: GetSplinePointCatmullRom         ( a a a a %f a -- )      \ Get (evaluate) spline point: Catmull-Rom : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t
-FUNCTION: GetSplinePointBezierQuad         ( a a a %f a -- )        \ Get (evaluate) spline point: Quadratic Bezier : Vector2 p1, Vector2 c2, Vector2 p3, float t
-FUNCTION: GetSplinePointBezierCubic        ( a a a a %f a -- )      \ Get (evaluate) spline point: Cubic Bezier : Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t
+FUNCTION: GetSplinePointLinear             ( a a %f -- a )          \ Get (evaluate) spline point: Linear : Vector2 startPos, Vector2 endPos, float t
+FUNCTION: GetSplinePointBasis              ( a a a a %f -- a )      \ Get (evaluate) spline point: B-Spline : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t
+FUNCTION: GetSplinePointCatmullRom         ( a a a a %f -- a )      \ Get (evaluate) spline point: Catmull-Rom : Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t
+FUNCTION: GetSplinePointBezierQuad         ( a a a %f -- a )        \ Get (evaluate) spline point: Quadratic Bezier : Vector2 p1, Vector2 c2, Vector2 p3, float t
+FUNCTION: GetSplinePointBezierCubic        ( a a a a %f -- a )      \ Get (evaluate) spline point: Cubic Bezier : Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t
 
 \ Basic shapes collision detection Module
 FUNCTION: CheckCollisionRecs               ( a a -- i )             \ Check collision between two rectangles : Rectangle rec1, Rectangle rec2
@@ -330,18 +320,18 @@ FUNCTION: CheckCollisionPointTriangle      ( a a a a -- i )         \ Check if p
 FUNCTION: CheckCollisionPointLine          ( a a a i -- i )         \ Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold] : Vector2 point, Vector2 p1, Vector2 p2, int threshold
 FUNCTION: CheckCollisionPointPoly          ( a a i -- i )           \ Check if point is within a polygon described by array of vertices : Vector2 point, const Vector2 *points, int pointCount
 FUNCTION: CheckCollisionLines              ( a a a a a -- i )       \ Check the collision between two lines defined by two points each, returns collision point by reference : Vector2 startPos1, Vector2 endPos1, Vector2 startPos2, Vector2 endPos2, Vector2 *collisionPoint
-FUNCTION: GetCollisionRec                  ( a a a -- )             \ Get collision rectangle for two rectangles collision : Rectangle rec1, Rectangle rec2
+FUNCTION: GetCollisionRec                  ( a a -- a )             \ Get collision rectangle for two rectangles collision : Rectangle rec1, Rectangle rec2
 
 \ Image loading Module
 
 \ NOTE: These Module do not require GPU access
-FUNCTION: LoadImage                        ( a a -- )               \ Load image from file into CPU memory (RAM) : const char *fileName
-FUNCTION: LoadImageRaw                     ( a i i i i a -- )       \ Load image from RAW file data : const char *fileName, int width, int height, int format, int headerSize
-FUNCTION: LoadImageAnim                    ( a a a -- )             \ Load image sequence from file (frames appended to image.data) : const char *fileName, int *frames
-FUNCTION: LoadImageAnimFromMemory          ( a a i a a -- )         \ Load image sequence from memory buffer : const char *fileType, const unsigned char *fileData, int dataSize, int *frames
-FUNCTION: LoadImageFromMemory              ( a a i a -- )           \ Load image from memory buffer, fileType refers to extension: i.e. '.png' : const char *fileType, const unsigned char *fileData, int dataSize
-FUNCTION: LoadImageFromTexture             ( a a -- )               \ Load image from GPU texture data : Texture2D texture
-FUNCTION: LoadImageFromScreen              ( a -- )                 \ Load image from screen buffer and (screenshot) : void
+FUNCTION: LoadImage                        ( a -- a )               \ Load image from file into CPU memory (RAM) : const char *fileName
+FUNCTION: LoadImageRaw                     ( a i i i i -- a )       \ Load image from RAW file data : const char *fileName, int width, int height, int format, int headerSize
+FUNCTION: LoadImageAnim                    ( a a -- a )             \ Load image sequence from file (frames appended to image.data) : const char *fileName, int *frames
+FUNCTION: LoadImageAnimFromMemory          ( a a i a -- a )         \ Load image sequence from memory buffer : const char *fileType, const unsigned char *fileData, int dataSize, int *frames
+FUNCTION: LoadImageFromMemory              ( a a i -- a )           \ Load image from memory buffer, fileType refers to extension: i.e. '.png' : const char *fileType, const unsigned char *fileData, int dataSize
+FUNCTION: LoadImageFromTexture             ( a -- a )               \ Load image from GPU texture data : Texture2D texture
+FUNCTION: LoadImageFromScreen              ( -- a )                 \ Load image from screen buffer and (screenshot) : void
 FUNCTION: IsImageValid                     ( a -- i )               \ Check if an image is valid (data and parameters) : Image image
 FUNCTION: UnloadImage                      ( a -- )                 \ Unload image from CPU memory (RAM) : Image image
 FUNCTION: ExportImage                      ( a a -- i )             \ Export image data to file, returns true on success : Image image, const char *fileName
@@ -349,22 +339,22 @@ FUNCTION: ExportImageToMemory              ( a a a -- a )           \ Export ima
 FUNCTION: ExportImageAsCode                ( a a -- i )             \ Export image as code file defining an array of bytes, returns true on success : Image image, const char *fileName
 
 \ Image generation Module
-FUNCTION: GenImageColor                    ( i i u a -- )           \ Generate image: plain color : int width, int height, Color color
-FUNCTION: GenImageGradientLinear           ( i i i u u a -- )       \ Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient : int width, int height, int direction, Color start, Color end
-FUNCTION: GenImageGradientRadial           ( i i %f u u a -- )      \ Generate image: radial gradient : int width, int height, float density, Color inner, Color outer
-FUNCTION: GenImageGradientSquare           ( i i %f u u a -- )      \ Generate image: square gradient : int width, int height, float density, Color inner, Color outer
-FUNCTION: GenImageChecked                  ( i i i i u u a -- )     \ Generate image: checked : int width, int height, int checksX, int checksY, Color col1, Color col2
-FUNCTION: GenImageWhiteNoise               ( i i %f a -- )          \ Generate image: white noise : int width, int height, float factor
-FUNCTION: GenImagePerlinNoise              ( i i i i %f a -- )      \ Generate image: perlin noise : int width, int height, int offsetX, int offsetY, float scale
-FUNCTION: GenImageCellular                 ( i i i a -- )           \ Generate image: cellular algorithm, bigger tileSize means bigger cells : int width, int height, int tileSize
-FUNCTION: GenImageText                     ( i i a a -- )           \ Generate image: grayscale image from text data : int width, int height, const char *text
+FUNCTION: GenImageColor                    ( i i u -- a )           \ Generate image: plain color : int width, int height, Color color
+FUNCTION: GenImageGradientLinear           ( i i i u u -- a )       \ Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient : int width, int height, int direction, Color start, Color end
+FUNCTION: GenImageGradientRadial           ( i i %f u u -- a )      \ Generate image: radial gradient : int width, int height, float density, Color inner, Color outer
+FUNCTION: GenImageGradientSquare           ( i i %f u u -- a )      \ Generate image: square gradient : int width, int height, float density, Color inner, Color outer
+FUNCTION: GenImageChecked                  ( i i i i u u -- a )     \ Generate image: checked : int width, int height, int checksX, int checksY, Color col1, Color col2
+FUNCTION: GenImageWhiteNoise               ( i i %f -- a )          \ Generate image: white noise : int width, int height, float factor
+FUNCTION: GenImagePerlinNoise              ( i i i i %f -- a )      \ Generate image: perlin noise : int width, int height, int offsetX, int offsetY, float scale
+FUNCTION: GenImageCellular                 ( i i i -- a )           \ Generate image: cellular algorithm, bigger tileSize means bigger cells : int width, int height, int tileSize
+FUNCTION: GenImageText                     ( i i a -- a )           \ Generate image: grayscale image from text data : int width, int height, const char *text
 
 \ Image manipulation Module
-FUNCTION: ImageCopy                        ( a a -- )               \ Create an image duplicate (useful for transformations) : Image image
-FUNCTION: ImageFromImage                   ( a a a -- )             \ Create an image from another image piece : Image image, Rectangle rec
-FUNCTION: ImageFromChannel                 ( a i a -- )             \ Create an image from a selected channel of another image (GRAYSCALE) : Image image, int selectedChannel
-FUNCTION: ImageText                        ( a i u a -- )           \ Create an image from text (default font) : const char *text, int fontSize, Color color
-FUNCTION: ImageTextEx                      ( a a %f %f u a -- )     \ Create an image from text (custom sprite font) : Font font, const char *text, float fontSize, float spacing, Color tint
+FUNCTION: ImageCopy                        ( a -- a )               \ Create an image duplicate (useful for transformations) : Image image
+FUNCTION: ImageFromImage                   ( a a -- a )             \ Create an image from another image piece : Image image, Rectangle rec
+FUNCTION: ImageFromChannel                 ( a i -- a )             \ Create an image from a selected channel of another image (GRAYSCALE) : Image image, int selectedChannel
+FUNCTION: ImageText                        ( a i u -- a )           \ Create an image from text (default font) : const char *text, int fontSize, Color color
+FUNCTION: ImageTextEx                      ( a a %f %f u -- a )     \ Create an image from text (custom sprite font) : Font font, const char *text, float fontSize, float spacing, Color tint
 FUNCTION: ImageFormat                      ( a i -- )               \ Convert image data to desired format : Image *image, int newFormat
 FUNCTION: ImageToPOT                       ( a u -- )               \ Convert image to POT (power-of-two) : Image *image, Color fill
 FUNCTION: ImageCrop                        ( a a -- )               \ Crop an image to a defined rectangle : Image *image, Rectangle crop
@@ -375,7 +365,7 @@ FUNCTION: ImageAlphaPremultiply            ( a -- )                 \ Premultipl
 FUNCTION: ImageBlurGaussian                ( a i -- )               \ Apply Gaussian blur using a box blur approximation : Image *image, int blurSize
 FUNCTION: ImageKernelConvolution           ( a a i -- )             \ Apply custom square convolution kernel to image : Image *image, const float *kernel, int kernelSize
 FUNCTION: ImageResize                      ( a i i -- )             \ Resize image (Bicubic scaling algorithm) : Image *image, int newWidth, int newHeight
-FUNCTION: ImageResizeNN                    ( a i i -- )             \ Resize image (Nearest-Neighbor scaling algorithm) : Image *image, int newWidth, int newHeight
+FUNCTION: ImageResizeNN                    ( a i i -- )             \ Resize image (Nearest-Neighbor scaling algorithm) : Image *image, int newWidth,int newHeight
 FUNCTION: ImageResizeCanvas                ( a i i i i u -- )       \ Resize canvas and fill with color : Image *image, int newWidth, int newHeight, int offsetX, int offsetY, Color fill
 FUNCTION: ImageMipmaps                     ( a -- )                 \ Compute all mipmap levels for a provided image : Image *image
 FUNCTION: ImageDither                      ( a i i i i -- )         \ Dither image data to 16bpp or lower (Floyd-Steinberg dithering) : Image *image, int rBpp, int gBpp, int bBpp, int aBpp
@@ -394,7 +384,7 @@ FUNCTION: LoadImageColors                  ( a -- a )               \ Load color
 FUNCTION: LoadImagePalette                 ( a i a -- a )           \ Load colors palette from image as a Color array (RGBA - 32bit) : Image image, int maxPaletteSize, int *colorCount
 FUNCTION: UnloadImageColors                ( a -- )                 \ Unload color data loaded with LoadImageColors() : Color *colors
 FUNCTION: UnloadImagePalette               ( a -- )                 \ Unload colors palette loaded with LoadImagePalette() : Color *colors
-FUNCTION: GetImageAlphaBorder              ( a %f a -- )            \ Get image alpha border rectangle : Image image, float threshold
+FUNCTION: GetImageAlphaBorder              ( a %f -- a )            \ Get image alpha border rectangle : Image image, float threshold
 FUNCTION: GetImageColor                    ( a i i -- u )           \ Get image pixel color at (x, y) position : Image image, int x, int y
 
 \ Image drawing Module
@@ -417,8 +407,8 @@ FUNCTION: ImageDrawRectangleLines          ( a a i u -- )           \ Draw recta
 FUNCTION: ImageDrawTriangle                ( a a a a u -- )         \ Draw triangle within an image : Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color
 FUNCTION: ImageDrawTriangleEx              ( a a a a u u u -- )     \ Draw triangle with interpolated colors within an image : Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color c1, Color c2, Color c3
 FUNCTION: ImageDrawTriangleLines           ( a a a a u -- )         \ Draw triangle outline within an image : Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color
-FUNCTION: ImageDrawTriangleFan             ( a a i u -- )           \ Draw a triangle fan defined by points within an image (first vertex is the center) : Image *dst, const Vector2 *points, int pointCount, Color color
-FUNCTION: ImageDrawTriangleStrip           ( a a i u -- )           \ Draw a triangle strip defined by points within an image : Image *dst, const Vector2 *points, int pointCount, Color color
+FUNCTION: ImageDrawTriangleFan             ( a a i u -- )           \ Draw a triangle fan defined by points within an image (first vertex is the center) : Image *dst, Vector2 *points, int pointCount, Color color
+FUNCTION: ImageDrawTriangleStrip           ( a a i u -- )           \ Draw a triangle strip defined by points within an image : Image *dst, Vector2 *points, int pointCount, Color color
 FUNCTION: ImageDraw                        ( a a a a u -- )         \ Draw a source image within a destination image (tint applied to source) : Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint
 FUNCTION: ImageDrawText                    ( a a i i i u -- )       \ Draw text (using default font) within an image (destination) : Image *dst, const char *text, int posX, int posY, int fontSize, Color color
 FUNCTION: ImageDrawTextEx                  ( a a a a %f %f u -- )   \ Draw text (custom sprite font) within an image (destination) : Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint
@@ -426,16 +416,16 @@ FUNCTION: ImageDrawTextEx                  ( a a a a %f %f u -- )   \ Draw text 
 \ Texture loading Module
 
 \ NOTE: These Module require GPU access
-FUNCTION: LoadTexture                      ( a a -- )               \ Load texture from file into GPU memory (VRAM) : const char *fileName
-FUNCTION: LoadTextureFromImage             ( a a -- )               \ Load texture from image data : Image image
-FUNCTION: LoadTextureCubemap               ( a i a -- )             \ Load cubemap from image, multiple image cubemap layouts supported : Image image, int layout
-FUNCTION: LoadRenderTexture                ( i i a -- )             \ Load texture for rendering (framebuffer) : int width, int height
+FUNCTION: LoadTexture                      ( a -- a )               \ Load texture from file into GPU memory (VRAM) : const char *fileName
+FUNCTION: LoadTextureFromImage             ( a -- a )               \ Load texture from image data : Image image
+FUNCTION: LoadTextureCubemap               ( a i -- a )             \ Load cubemap from image, multiple image cubemap layouts supported : Image image, int layout
+FUNCTION: LoadRenderTexture                ( i i -- a )             \ Load texture for rendering (framebuffer) : int width, int height
 FUNCTION: IsTextureValid                   ( a -- i )               \ Check if a texture is valid (loaded in GPU) : Texture2D texture
 FUNCTION: UnloadTexture                    ( a -- )                 \ Unload texture from GPU memory (VRAM) : Texture2D texture
 FUNCTION: IsRenderTextureValid             ( a -- i )               \ Check if a render texture is valid (loaded in GPU) : RenderTexture2D target
 FUNCTION: UnloadRenderTexture              ( a -- )                 \ Unload render texture from GPU memory (VRAM) : RenderTexture2D target
-FUNCTION: UpdateTexture                    ( a a -- )               \ Update GPU texture with new data (pixels should be able to fill texture) : Texture2D texture, const void *pixels
-FUNCTION: UpdateTextureRec                 ( a a a -- )             \ Update GPU texture rectangle with new data (pixels and rec should fit in texture) : Texture2D texture, Rectangle rec, const void *pixels
+FUNCTION: UpdateTexture                    ( a a -- )               \ Update GPU texture with new data : Texture2D texture, const void *pixels
+FUNCTION: UpdateTextureRec                 ( a a a -- )             \ Update GPU texture rectangle with new data : Texture2D texture, Rectangle rec, const void *pixels
 
 \ Texture configuration Module
 FUNCTION: GenTextureMipmaps                ( a -- )                 \ Generate GPU mipmaps for a texture : Texture2D *texture
@@ -454,9 +444,9 @@ FUNCTION: DrawTextureNPatch                ( a a a a %f u -- )      \ Draws a te
 FUNCTION: ColorIsEqual                     ( u u -- i )             \ Check if two colors are equal : Color col1, Color col2
 FUNCTION: Fade                             ( u %f -- u )            \ Get color with alpha applied, alpha goes from 0.0f to 1.0f : Color color, float alpha
 FUNCTION: ColorToInt                       ( u -- i )               \ Get hexadecimal value for a Color (0xRRGGBBAA) : Color color
-FUNCTION: ColorNormalize                   ( u a -- )               \ Get Color normalized as float [0..1] : Color color
+FUNCTION: ColorNormalize                   ( u -- a )               \ Get Color normalized as float [0..1] : Color color
 FUNCTION: ColorFromNormalized              ( a -- u )               \ Get Color from normalized values [0..1] : Vector4 normalized
-FUNCTION: ColorToHSV                       ( u a -- )               \ Get HSV values for a Color, hue [0..360], saturation/value [0..1] : Color color
+FUNCTION: ColorToHSV                       ( u -- a )               \ Get HSV values for a Color, hue [0..360], saturation/value [0..1] : Color color
 FUNCTION: ColorFromHSV                     ( %f %f %f -- u )        \ Get a Color from HSV values, hue [0..360], saturation/value [0..1] : float hue, float saturation, float value
 FUNCTION: ColorTint                        ( u u -- u )             \ Get color multiplied with another color : Color color, Color tint
 FUNCTION: ColorBrightness                  ( u %f -- u )            \ Get color with brightness correction, brightness factor goes from -1.0f to 1.0f : Color color, float factor
@@ -470,14 +460,14 @@ FUNCTION: SetPixelColor                    ( a u i -- )             \ Set color 
 FUNCTION: GetPixelDataSize                 ( i i i -- i )           \ Get pixel data size in bytes for certain format : int width, int height, int format
 
 \ Font loading/unloading Module
-FUNCTION: GetFontDefault                   ( a -- )                 \ Get the default Font : void
-FUNCTION: LoadFont                         ( a a -- )               \ Load font from file into GPU memory (VRAM) : const char *fileName
-FUNCTION: LoadFontEx                       ( a i a i a -- )         \ Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height : const char *fileName, int fontSize, const int *codepoints, int codepointCount
-FUNCTION: LoadFontFromImage                ( a u i a -- )           \ Load font from Image (XNA style) : Image image, Color key, int firstChar
-FUNCTION: LoadFontFromMemory               ( a a i i a i a -- )     \ Load font from memory buffer, fileType refers to extension: i.e. '.ttf' : const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, const int *codepoints, int codepointCount
+FUNCTION: GetFontDefault                   ( -- a )                 \ Get the default Font : void
+FUNCTION: LoadFont                         ( a -- a )               \ Load font from file into GPU memory (VRAM) : const char *fileName
+FUNCTION: LoadFontEx                       ( a i a i -- a )         \ Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height : const char *fileName, int fontSize, int *codepoints, int codepointCount
+FUNCTION: LoadFontFromImage                ( a u i -- a )           \ Load font from Image (XNA style) : Image image, Color key, int firstChar
+FUNCTION: LoadFontFromMemory               ( a a i i a i -- a )     \ Load font from memory buffer, fileType refers to extension: i.e. '.ttf' : const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount
 FUNCTION: IsFontValid                      ( a -- i )               \ Check if a font is valid (font data loaded, WARNING: GPU texture not checked) : Font font
-FUNCTION: LoadFontData                     ( a i i a i i a -- a )   \ Load font data for further use : const unsigned char *fileData, int dataSize, int fontSize, const int *codepoints, int codepointCount, int type, int *glyphCount
-FUNCTION: GenImageFontAtlas                ( a a i i i i a -- )     \ Generate image font atlas using chars info : const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod
+FUNCTION: LoadFontData                     ( a i i a i i -- a )     \ Load font data for further use : const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type
+FUNCTION: GenImageFontAtlas                ( a a i i i i -- a )     \ Generate image font atlas using chars info : const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod
 FUNCTION: UnloadFontData                   ( a i -- )               \ Unload font chars info data (RAM) : GlyphInfo *glyphs, int glyphCount
 FUNCTION: UnloadFont                       ( a -- )                 \ Unload font from GPU memory (VRAM) : Font font
 FUNCTION: ExportFontAsCode                 ( a a -- i )             \ Export font as code file, returns true on success : Font font, const char *fileName
@@ -493,10 +483,10 @@ FUNCTION: DrawTextCodepoints               ( a a i a %f %f u -- )   \ Draw multi
 \ Text font info Module
 FUNCTION: SetTextLineSpacing               ( i -- )                 \ Set vertical line spacing when drawing with line-breaks : int spacing
 FUNCTION: MeasureText                      ( a i -- i )             \ Measure string width for default font : const char *text, int fontSize
-FUNCTION: MeasureTextEx                    ( a a %f %f a -- )       \ Measure string size for Font : Font font, const char *text, float fontSize, float spacing
+FUNCTION: MeasureTextEx                    ( a a %f %f -- a )       \ Measure string size for Font : Font font, const char *text, float fontSize, float spacing
 FUNCTION: GetGlyphIndex                    ( a i -- i )             \ Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found : Font font, int codepoint
-FUNCTION: GetGlyphInfo                     ( a i a -- )             \ Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found : Font font, int codepoint
-FUNCTION: GetGlyphAtlasRec                 ( a i a -- )             \ Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found : Font font, int codepoint
+FUNCTION: GetGlyphInfo                     ( a i -- a )             \ Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found : Font font, int codepoint
+FUNCTION: GetGlyphAtlasRec                 ( a i -- a )             \ Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found : Font font, int codepoint
 
 \ Text codepoints management Module (unicode characters)
 FUNCTION: LoadUTF8                         ( a i -- a )             \ Load UTF-8 text encoded from codepoints array : const int *codepoints, int length
@@ -510,31 +500,24 @@ FUNCTION: GetCodepointPrevious             ( a a -- i )             \ Get previo
 FUNCTION: CodepointToUTF8                  ( i a -- a )             \ Encode one codepoint into UTF-8 byte array (array length returned as parameter) : int codepoint, int *utf8Size
 
 \ Text strings management Module (no UTF-8 strings, only byte chars)
-
-\ WARNING 1: Most of these Module use internal static buffers[], it's recommended to store returned data on user-side for re-use
-FUNCTION: LoadTextLines                    ( a a -- *a )            \ Load text as separate lines ('\n') : const char *text, int *count
-FUNCTION: UnloadTextLines                  ( a i -- )               \ Unload text lines : char **text, int lineCount
 FUNCTION: TextCopy                         ( a a -- i )             \ Copy one string to another, returns bytes copied : char *dst, const char *src
 FUNCTION: TextIsEqual                      ( a a -- i )             \ Check if two text string are equal : const char *text1, const char *text2
 FUNCTION: TextLength                       ( a -- u )               \ Get text length, checks for '\0' ending : const char *text
 FUNCTION: TextFormat                       ( a -- a )               \ Text formatting with variables (sprintf() style) : const char *text, ...
 FUNCTION: TextSubtext                      ( a i i -- a )           \ Get a piece of a text string : const char *text, int position, int length
-FUNCTION: TextRemoveSpaces                 ( a -- a )               \ Remove text spaces, concat words : const char *text
-FUNCTION: GetTextBetween                   ( a a a -- a )           \ Get text between two strings : const char *text, const char *begin, const char *end
-FUNCTION: TextReplace                      ( a a a -- a )           \ Replace text string (WARNING: memory must be freed!) : const char *text, const char *search, const char *replacement
-FUNCTION: TextReplaceBetween               ( a a a a -- a )         \ Replace text between two specific strings (WARNING: memory must be freed!) : const char *text, const char *begin, const char *end, const char *replacement
+FUNCTION: TextReplace                      ( a a a -- a )           \ Replace text string (WARNING: memory must be freed!) : const char *text, const char *replace, const char *by
 FUNCTION: TextInsert                       ( a a i -- a )           \ Insert text in a position (WARNING: memory must be freed!) : const char *text, const char *insert, int position
-FUNCTION: TextJoin                         ( a i a -- a )           \ Join text strings with delimiter : char **textList, int count, const char *delimiter
-FUNCTION: TextSplit                        ( a a a -- *a )          \ Split text into multiple strings, using MAX_TEXTSPLIT_COUNT static strings : const char *text, char delimiter, int *count
-FUNCTION: TextAppend                       ( a a a -- )             \ Append text at specific position and move cursor : char *text, const char *append, int *position
-FUNCTION: TextFindIndex                    ( a a -- i )             \ Find first text occurrence within a string, -1 if not found : const char *text, const char *search
+FUNCTION: TextJoin                         ( a i a -- a )           \ Join text strings with delimiter : const char **textList, int count, const char *delimiter
+FUNCTION: TextSplit                        ( a a a -- *a )          \ Split text into multiple strings : const char *text, char delimiter, int *count
+FUNCTION: TextAppend                       ( a a a -- )             \ Append text at specific position and move cursor! : char *text, const char *append, int *position
+FUNCTION: TextFindIndex                    ( a a -- i )             \ Find first text occurrence within a string : const char *text, const char *find
 FUNCTION: TextToUpper                      ( a -- a )               \ Get upper case version of provided string : const char *text
 FUNCTION: TextToLower                      ( a -- a )               \ Get lower case version of provided string : const char *text
 FUNCTION: TextToPascal                     ( a -- a )               \ Get Pascal case notation version of provided string : const char *text
 FUNCTION: TextToSnake                      ( a -- a )               \ Get Snake case notation version of provided string : const char *text
 FUNCTION: TextToCamel                      ( a -- a )               \ Get Camel case notation version of provided string : const char *text
-FUNCTION: TextToInteger                    ( a -- i )               \ Get integer value from text : const char *text
-FUNCTION: TextToFloat                      ( a -- %f )              \ Get float value from text : const char *text
+FUNCTION: TextToInteger                    ( a -- i )               \ Get integer value from text (negative values not supported) : const char *text
+FUNCTION: TextToFloat                      ( a -- %f )              \ Get float value from text (negative values not supported) : const char *text
 
 \ Basic geometric 3D shapes drawing Module
 FUNCTION: DrawLine3D                       ( a a u -- )             \ Draw a line in 3D world space : Vector3 startPos, Vector3 endPos, Color color
@@ -560,11 +543,11 @@ FUNCTION: DrawRay                          ( a u -- )               \ Draw a ray
 FUNCTION: DrawGrid                         ( i %f -- )              \ Draw a grid (centered at (0, 0, 0)) : int slices, float spacing
 
 \ Model management Module
-FUNCTION: LoadModel                        ( a a -- )               \ Load model from files (meshes and materials) : const char *fileName
-FUNCTION: LoadModelFromMesh                ( a a -- )               \ Load model from generated mesh (default material) : Mesh mesh
+FUNCTION: LoadModel                        ( a -- a )               \ Load model from files (meshes and materials) : const char *fileName
+FUNCTION: LoadModelFromMesh                ( a -- a )               \ Load model from generated mesh (default material) : Mesh mesh
 FUNCTION: IsModelValid                     ( a -- i )               \ Check if a model is valid (loaded in GPU, VAO/VBOs) : Model model
 FUNCTION: UnloadModel                      ( a -- )                 \ Unload model (including meshes) from memory (RAM and/or VRAM) : Model model
-FUNCTION: GetModelBoundingBox              ( a a -- )               \ Compute model bounding box limits (considers all meshes) : Model model
+FUNCTION: GetModelBoundingBox              ( a -- a )               \ Compute model bounding box limits (considers all meshes) : Model model
 
 \ Model drawing Module
 FUNCTION: DrawModel                        ( a a %f u -- )          \ Draw a model (with texture if set) : Model model, Vector3 position, float scale, Color tint
@@ -584,27 +567,27 @@ FUNCTION: UpdateMeshBuffer                 ( a i a i i -- )         \ Update mes
 FUNCTION: UnloadMesh                       ( a -- )                 \ Unload mesh data from CPU and GPU : Mesh mesh
 FUNCTION: DrawMesh                         ( a a a -- )             \ Draw a 3d mesh with material and transform : Mesh mesh, Material material, Matrix transform
 FUNCTION: DrawMeshInstanced                ( a a a i -- )           \ Draw multiple mesh instances with material and different transforms : Mesh mesh, Material material, const Matrix *transforms, int instances
-FUNCTION: GetMeshBoundingBox               ( a a -- )               \ Compute mesh bounding box limits : Mesh mesh
+FUNCTION: GetMeshBoundingBox               ( a -- a )               \ Compute mesh bounding box limits : Mesh mesh
 FUNCTION: GenMeshTangents                  ( a -- )                 \ Compute mesh tangents : Mesh *mesh
 FUNCTION: ExportMesh                       ( a a -- i )             \ Export mesh data to file, returns true on success : Mesh mesh, const char *fileName
 FUNCTION: ExportMeshAsCode                 ( a a -- i )             \ Export mesh as code file (.h) defining multiple arrays of vertex attributes : Mesh mesh, const char *fileName
 
 \ Mesh generation Module
-FUNCTION: GenMeshPoly                      ( i %f a -- )            \ Generate polygonal mesh : int sides, float radius
-FUNCTION: GenMeshPlane                     ( %f %f i i a -- )       \ Generate plane mesh (with subdivisions) : float width, float length, int resX, int resZ
-FUNCTION: GenMeshCube                      ( %f %f %f a -- )        \ Generate cuboid mesh : float width, float height, float length
-FUNCTION: GenMeshSphere                    ( %f i i a -- )          \ Generate sphere mesh (standard sphere) : float radius, int rings, int slices
-FUNCTION: GenMeshHemiSphere                ( %f i i a -- )          \ Generate half-sphere mesh (no bottom cap) : float radius, int rings, int slices
-FUNCTION: GenMeshCylinder                  ( %f %f i a -- )         \ Generate cylinder mesh : float radius, float height, int slices
-FUNCTION: GenMeshCone                      ( %f %f i a -- )         \ Generate cone/pyramid mesh : float radius, float height, int slices
-FUNCTION: GenMeshTorus                     ( %f %f i i a -- )       \ Generate torus mesh : float radius, float size, int radSeg, int sides
-FUNCTION: GenMeshKnot                      ( %f %f i i a -- )       \ Generate trefoil knot mesh : float radius, float size, int radSeg, int sides
-FUNCTION: GenMeshHeightmap                 ( a a a -- )             \ Generate heightmap mesh from image data : Image heightmap, Vector3 size
-FUNCTION: GenMeshCubicmap                  ( a a a -- )             \ Generate cubes-based map mesh from image data : Image cubicmap, Vector3 cubeSize
+FUNCTION: GenMeshPoly                      ( i %f -- a )            \ Generate polygonal mesh : int sides, float radius
+FUNCTION: GenMeshPlane                     ( %f %f i i -- a )       \ Generate plane mesh (with subdivisions) : float width, float length, int resX, int resZ
+FUNCTION: GenMeshCube                      ( %f %f %f -- a )        \ Generate cuboid mesh : float width, float height, float length
+FUNCTION: GenMeshSphere                    ( %f i i -- a )          \ Generate sphere mesh (standard sphere) : float radius, int rings, int slices
+FUNCTION: GenMeshHemiSphere                ( %f i i -- a )          \ Generate half-sphere mesh (no bottom cap) : float radius, int rings, int slices
+FUNCTION: GenMeshCylinder                  ( %f %f i -- a )         \ Generate cylinder mesh : float radius, float height, int slices
+FUNCTION: GenMeshCone                      ( %f %f i -- a )         \ Generate cone/pyramid mesh : float radius, float height, int slices
+FUNCTION: GenMeshTorus                     ( %f %f i i -- a )       \ Generate torus mesh : float radius, float size, int radSeg, int sides
+FUNCTION: GenMeshKnot                      ( %f %f i i -- a )       \ Generate trefoil knot mesh : float radius, float size, int radSeg, int sides
+FUNCTION: GenMeshHeightmap                 ( a a -- a )             \ Generate heightmap mesh from image data : Image heightmap, Vector3 size
+FUNCTION: GenMeshCubicmap                  ( a a -- a )             \ Generate cubes-based map mesh from image data : Image cubicmap, Vector3 cubeSize
 
 \ Material loading/unloading Module
 FUNCTION: LoadMaterials                    ( a a -- a )             \ Load materials from model file : const char *fileName, int *materialCount
-FUNCTION: LoadMaterialDefault              ( a -- )                 \ Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps) : void
+FUNCTION: LoadMaterialDefault              ( -- a )                 \ Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps) : void
 FUNCTION: IsMaterialValid                  ( a -- i )               \ Check if a material is valid (shader assigned, map textures loaded in GPU) : Material material
 FUNCTION: UnloadMaterial                   ( a -- )                 \ Unload material from GPU memory (VRAM) : Material material
 FUNCTION: SetMaterialTexture               ( a i a -- )             \ Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...) : Material *material, int mapType, Texture2D texture
@@ -622,11 +605,11 @@ FUNCTION: IsModelAnimationValid            ( a a -- i )             \ Check mode
 FUNCTION: CheckCollisionSpheres            ( a %f a %f -- i )       \ Check collision between two spheres : Vector3 center1, float radius1, Vector3 center2, float radius2
 FUNCTION: CheckCollisionBoxes              ( a a -- i )             \ Check collision between two bounding boxes : BoundingBox box1, BoundingBox box2
 FUNCTION: CheckCollisionBoxSphere          ( a a %f -- i )          \ Check collision between box and sphere : BoundingBox box, Vector3 center, float radius
-FUNCTION: GetRayCollisionSphere            ( a a %f a -- )          \ Get collision info between ray and sphere : Ray ray, Vector3 center, float radius
-FUNCTION: GetRayCollisionBox               ( a a a -- )             \ Get collision info between ray and box : Ray ray, BoundingBox box
-FUNCTION: GetRayCollisionMesh              ( a a a a -- )           \ Get collision info between ray and mesh : Ray ray, Mesh mesh, Matrix transform
-FUNCTION: GetRayCollisionTriangle          ( a a a a a -- )         \ Get collision info between ray and triangle : Ray ray, Vector3 p1, Vector3 p2, Vector3 p3
-FUNCTION: GetRayCollisionQuad              ( a a a a a a -- )       \ Get collision info between ray and quad : Ray ray, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4
+FUNCTION: GetRayCollisionSphere            ( a a %f -- a )          \ Get collision info between ray and sphere : Ray ray, Vector3 center, float radius
+FUNCTION: GetRayCollisionBox               ( a a -- a )             \ Get collision info between ray and box : Ray ray, BoundingBox box
+FUNCTION: GetRayCollisionMesh              ( a a a -- a )           \ Get collision info between ray and mesh : Ray ray, Mesh mesh, Matrix transform
+FUNCTION: GetRayCollisionTriangle          ( a a a a -- a )         \ Get collision info between ray and triangle : Ray ray, Vector3 p1, Vector3 p2, Vector3 p3
+FUNCTION: GetRayCollisionQuad              ( a a a a a -- a )       \ Get collision info between ray and quad : Ray ray, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4
 
 \ Audio device management Module
 FUNCTION: InitAudioDevice                  ( -- )                   \ Initialize audio device and context : void
@@ -636,14 +619,14 @@ FUNCTION: SetMasterVolume                  ( %f -- )                \ Set master
 FUNCTION: GetMasterVolume                  ( -- %f )                \ Get master volume (listener) : void
 
 \ Wave/Sound loading/unloading Module
-FUNCTION: LoadWave                         ( a a -- )               \ Load wave data from file : const char *fileName
-FUNCTION: LoadWaveFromMemory               ( a a i a -- )           \ Load wave from memory buffer, fileType refers to extension: i.e. '.wav' : const char *fileType, const unsigned char *fileData, int dataSize
+FUNCTION: LoadWave                         ( a -- a )               \ Load wave data from file : const char *fileName
+FUNCTION: LoadWaveFromMemory               ( a a i -- a )           \ Load wave from memory buffer, fileType refers to extension: i.e. '.wav' : const char *fileType, const unsigned char *fileData, int dataSize
 FUNCTION: IsWaveValid                      ( a -- i )               \ Checks if wave data is valid (data loaded and parameters) : Wave wave
-FUNCTION: LoadSound                        ( a a -- )               \ Load sound from file : const char *fileName
-FUNCTION: LoadSoundFromWave                ( a a -- )               \ Load sound from wave data : Wave wave
-FUNCTION: LoadSoundAlias                   ( a a -- )               \ Create a new sound that shares the same sample data as the source sound, does not own the sound data : Sound source
+FUNCTION: LoadSound                        ( a -- a )               \ Load sound from file : const char *fileName
+FUNCTION: LoadSoundFromWave                ( a -- a )               \ Load sound from wave data : Wave wave
+FUNCTION: LoadSoundAlias                   ( a -- a )               \ Create a new sound that shares the same sample data as the source sound, does not own the sound data : Sound source
 FUNCTION: IsSoundValid                     ( a -- i )               \ Checks if a sound is valid (data loaded and buffers initialized) : Sound sound
-FUNCTION: UpdateSound                      ( a a i -- )             \ Update sound buffer with new data (data and frame count should fit in sound) : Sound sound, const void *data, int sampleCount
+FUNCTION: UpdateSound                      ( a a i -- )             \ Update sound buffer with new data : Sound sound, const void *data, int sampleCount
 FUNCTION: UnloadWave                       ( a -- )                 \ Unload wave data : Wave wave
 FUNCTION: UnloadSound                      ( a -- )                 \ Unload sound : Sound sound
 FUNCTION: UnloadSoundAlias                 ( a -- )                 \ Unload a sound alias (does not deallocate sample data) : Sound alias
@@ -659,15 +642,15 @@ FUNCTION: IsSoundPlaying                   ( a -- i )               \ Check if a
 FUNCTION: SetSoundVolume                   ( a %f -- )              \ Set volume for a sound (1.0 is max level) : Sound sound, float volume
 FUNCTION: SetSoundPitch                    ( a %f -- )              \ Set pitch for a sound (1.0 is base level) : Sound sound, float pitch
 FUNCTION: SetSoundPan                      ( a %f -- )              \ Set pan for a sound (0.5 is center) : Sound sound, float pan
-FUNCTION: WaveCopy                         ( a a -- )               \ Copy a wave to a new wave : Wave wave
+FUNCTION: WaveCopy                         ( a -- a )               \ Copy a wave to a new wave : Wave wave
 FUNCTION: WaveCrop                         ( a i i -- )             \ Crop a wave to defined frames range : Wave *wave, int initFrame, int finalFrame
 FUNCTION: WaveFormat                       ( a i i i -- )           \ Convert wave data to desired format : Wave *wave, int sampleRate, int sampleSize, int channels
 FUNCTION: LoadWaveSamples                  ( a -- a )               \ Load samples data from wave as a 32bit float data array : Wave wave
 FUNCTION: UnloadWaveSamples                ( a -- )                 \ Unload samples data loaded with LoadWaveSamples() : float *samples
 
 \ Music management Module
-FUNCTION: LoadMusicStream                  ( a a -- )               \ Load music stream from file : const char *fileName
-FUNCTION: LoadMusicStreamFromMemory        ( a a i a -- )           \ Load music stream from data : const char *fileType, const unsigned char *data, int dataSize
+FUNCTION: LoadMusicStream                  ( a -- a )               \ Load music stream from file : const char *fileName
+FUNCTION: LoadMusicStreamFromMemory        ( a a i -- a )           \ Load music stream from data : const char *fileType, const unsigned char *data, int dataSize
 FUNCTION: IsMusicValid                     ( a -- i )               \ Checks if a music stream is valid (context and buffers initialized) : Music music
 FUNCTION: UnloadMusicStream                ( a -- )                 \ Unload music stream : Music music
 FUNCTION: PlayMusicStream                  ( a -- )                 \ Start music playing : Music music
@@ -684,7 +667,7 @@ FUNCTION: GetMusicTimeLength               ( a -- %f )              \ Get music 
 FUNCTION: GetMusicTimePlayed               ( a -- %f )              \ Get current music time played (in seconds) : Music music
 
 \ AudioStream management Module
-FUNCTION: LoadAudioStream                  ( u u u a -- )           \ Load audio stream (to stream raw audio pcm data) : unsigned int sampleRate, unsigned int sampleSize, unsigned int channels
+FUNCTION: LoadAudioStream                  ( u u u -- a )           \ Load audio stream (to stream raw audio pcm data) : unsigned int sampleRate, unsigned int sampleSize, unsigned int channels
 FUNCTION: IsAudioStreamValid               ( a -- i )               \ Checks if an audio stream is valid (buffers initialized) : AudioStream stream
 FUNCTION: UnloadAudioStream                ( a -- )                 \ Unload audio stream and free memory : AudioStream stream
 FUNCTION: UpdateAudioStream                ( a a i -- )             \ Update audio stream buffers with data : AudioStream stream, const void *data, int frameCount
@@ -699,7 +682,10 @@ FUNCTION: SetAudioStreamPitch              ( a %f -- )              \ Set pitch 
 FUNCTION: SetAudioStreamPan                ( a %f -- )              \ Set pan for audio stream (0.5 is centered) : AudioStream stream, float pan
 FUNCTION: SetAudioStreamBufferSizeDefault  ( i -- )                 \ Default size for new audio streams : int size
 FUNCTION: SetAudioStreamCallback           ( a a -- )               \ Audio thread callback to request new data : AudioStream stream, AudioCallback callback
-FUNCTION: AttachAudioStreamProcessor       ( a a -- )               \ Attach audio stream processor to stream, receives frames x 2 samples as 'float' (stereo) : AudioStream stream, AudioCallback processor
+FUNCTION: AttachAudioStreamProcessor       ( a a -- )               \ Attach audio stream processor to stream, receives the samples as 'float' : AudioStream stream, AudioCallback processor
 FUNCTION: DetachAudioStreamProcessor       ( a a -- )               \ Detach audio stream processor from stream : AudioStream stream, AudioCallback processor
-FUNCTION: AttachAudioMixedProcessor        ( a -- )                 \ Attach audio stream processor to the entire audio pipeline, receives frames x 2 samples as 'float' (stereo) : AudioCallback processor
+FUNCTION: AttachAudioMixedProcessor        ( a -- )                 \ Attach audio stream processor to the entire audio pipeline, receives the samples as 'float' : AudioCallback processor
 FUNCTION: DetachAudioMixedProcessor        ( a -- )                 \ Detach audio stream processor from the entire audio pipeline : AudioCallback processor
+PUBLIC
+: /raylib raylib +order ;
+END-PACKAGE
