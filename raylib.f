@@ -512,7 +512,7 @@ FUNCTION: CodepointToUTF8                  ( i a -- a )             \ Encode one
 \ Text strings management Module (no UTF-8 strings, only byte chars)
 
 \ WARNING 1: Most of these Module use internal static buffers[], it's recommended to store returned data on user-side for re-use
-FUNCTION: LoadTextLines                    ( a a -- a )             \ Load text as separate lines ('\n') : const char *text, int *count
+FUNCTION: LoadTextLines                    ( a a -- *a )            \ Load text as separate lines ('\n') : const char *text, int *count
 FUNCTION: UnloadTextLines                  ( a i -- )               \ Unload text lines : char **text, int lineCount
 FUNCTION: TextCopy                         ( a a -- i )             \ Copy one string to another, returns bytes copied : char *dst, const char *src
 FUNCTION: TextIsEqual                      ( a a -- i )             \ Check if two text string are equal : const char *text1, const char *text2
@@ -525,7 +525,7 @@ FUNCTION: TextReplace                      ( a a a -- a )           \ Replace te
 FUNCTION: TextReplaceBetween               ( a a a a -- a )         \ Replace text between two specific strings (WARNING: memory must be freed!) : const char *text, const char *begin, const char *end, const char *replacement
 FUNCTION: TextInsert                       ( a a i -- a )           \ Insert text in a position (WARNING: memory must be freed!) : const char *text, const char *insert, int position
 FUNCTION: TextJoin                         ( a i a -- a )           \ Join text strings with delimiter : char **textList, int count, const char *delimiter
-FUNCTION: TextSplit                        ( a a a -- a )           \ Split text into multiple strings, using MAX_TEXTSPLIT_COUNT static strings : const char *text, char delimiter, int *count
+FUNCTION: TextSplit                        ( a a a -- *a )          \ Split text into multiple strings, using MAX_TEXTSPLIT_COUNT static strings : const char *text, char delimiter, int *count
 FUNCTION: TextAppend                       ( a a a -- )             \ Append text at specific position and move cursor : char *text, const char *append, int *position
 FUNCTION: TextFindIndex                    ( a a -- i )             \ Find first text occurrence within a string, -1 if not found : const char *text, const char *search
 FUNCTION: TextToUpper                      ( a -- a )               \ Get upper case version of provided string : const char *text
