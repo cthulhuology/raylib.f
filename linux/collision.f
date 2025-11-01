@@ -26,7 +26,7 @@ $ff3030ef CONSTANT RED
 
     1.0e 2.0e 1.0e Vector3: playerSize
 
-    GREEN Color: playerColor
+    GREEN value playerColor
 
     -4.0e 1.0e 0.0e Vector3: enemyBoxPos
     2.0e 2.0e 2.0e Vector3: enemyBoxSize
@@ -72,26 +72,22 @@ $ff3030ef CONSTANT RED
                                      playerPosition.z + playerSize.z/2 }},
             enemySpherePos, enemySphereSize)) collision = true;
 
-        if (collision) playerColor = RED;
-        else playerColor = GREEN;
-        //----------------------------------------------------------------------------------
+        collision if RED else GREEN then to playerColor 
+        
+	\ Draw
+        BeginDrawing
 
-        // Draw
-        //----------------------------------------------------------------------------------
-        BeginDrawing();
-
-            ClearBackground(RAYWHITE);
+            WHITE ClearBackground
 
             camera BeginMode3D
 
                 // Draw enemy-box
 		enemyBoxPos enemyBoxSize .x enemyBoxSize .y enemyBoxSize .z GRAY DrawCube
-		enemyBoxPos enemyBoxSize .x enemyBoxSize .y enemyBoxSize .z DARKGRAY);
-                DrawCubeWires
+		enemyBoxPos enemyBoxSize .x enemyBoxSize .y enemyBoxSize .z DARKGRAY DrawCubeWires
 
                 // Draw enemy-sphere
-		enemySpherePo, enemySphereSize $ff828282 DrawSphere
-		enemySpherePos enemySphereSize 16 16 $ff505050 DrawSphereWires \ DARKGRAY
+		enemySpherePo, enemySphereSize GRAY DrawSphere
+		enemySpherePos enemySphereSize 16 16 DARKGRAY DrawSphereWires
 
                 // Draw player
 		playerPosition playerSize playerColor DrawCubeV
@@ -100,7 +96,7 @@ $ff3030ef CONSTANT RED
 
             EndMode3D
 
-            z" Move player with arrow keys to collide" 220 40 20 $ff828282 DrawText \ GRAY
+            z" Move player with arrow keys to collide" 220 40 20 GRAY DrawText
 
             10 10 DrawFPS
 
