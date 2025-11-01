@@ -688,4 +688,36 @@ FUNCTION: AttachAudioMixedProcessor        ( a -- )                 \ Attach aud
 FUNCTION: DetachAudioMixedProcessor        ( a -- )                 \ Detach audio stream processor from the entire audio pipeline : AudioCallback processor
 PUBLIC
 : /raylib raylib +order ;
+
+: Vector2, ( F: x y -- ) swap sf, sf, ;
+: Vector2: ( F: x y -- ) create Vector2, ;
+
+: Vector3, ( F: x y z -- ) frot sf, fswap sf, sf, ;  
+: Vector3: ( F: x y z -- ) create Vector3, ;
+
+\ common methods
+: .x sf@ ;		: .x! sf! ;
+: .y |sf| + sf@ ;	: .y! |sf| + sf! ;
+: .z |sf| 2* + sf@ ;	: .z! |sf| 2* + sf! ;
+ 
+\ Camera construction
+: Camera: ( -- ) create ;
+: :Camera.position ( F: x y z -- ) Vector3, ;   : Camera.position ( a -- a ) ;
+: :Camera.target ( F: x y z -- ) Vector3, ;	: Camera.target   ( a -- a' ) |sf| 3 * + ;
+: :Camera.up ( F: x y z -- ) Vector3, ;		: Camera.up       ( a -- a' ) |sf| 6 * + ;
+: :Camera.fovy ( F: f -- ) sf, ;		: Camera.fovy	  ( a -- a' ) |sf| 9 * + ;
+: :Camera.projection: ( i -- ) , ;		: Camera.projection ( a -- a' ) |sf| 10 * + ;
+
+0 CONSTANT CAMERA_PERSPECTIVE
+1 CONSTANT CAMERA_ORTHOGRAPHIC
+
+: Color: ( abgr -- ) create l, does> l@ ;
+
+: .r $ff and ;			: .r! $ff and or ;
+: .g $ff00 and 8 rshift ;	: .g! 8 lshift $ff00 and or ;
+: .b $ff0000 and 16 rshift ;	: .b! 16 lshift $ff0000 and or ;
+: .a $ff000000 and 24 rshift ;	: .a! 24 lshift $ff000000 and or ;
+
+: float: ( F: f -- ) create sf, does> sf@ ;
+
 END-PACKAGE
