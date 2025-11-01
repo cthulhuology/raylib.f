@@ -1,5 +1,5 @@
 PACKAGE raylib
-LIBRARY raylib  \ Loads libraylib.so or raylib.dll or equivalent
+XLIBRARY raylib raylib.dll libraylib.so  \ Loads libraylib.so or raylib.dll or equivalent
 PRIVATE
 
 \ Callbacks to hook some internal Module
