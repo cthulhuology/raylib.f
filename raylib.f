@@ -690,34 +690,169 @@ PUBLIC
 : /raylib raylib +order ;
 
 : Vector2, ( F: x y -- ) swap sf, sf, ;
-: Vector2: ( F: x y -- ) create Vector2, ;
+: Vector2: ( F: x y -- ) create Vector2, ; immediate
+: Vector2! ( a F: x y -- ) dup |sf| + sf! sf! ;
 
 : Vector3, ( F: x y z -- ) frot sf, fswap sf, sf, ;  
-: Vector3: ( F: x y z -- ) create Vector3, ;
+: Vector3: ( F: x y z -- ) create Vector3, ; immediate
+: Vector3! ( a F: x y z -- ) 
+	dup |sf| 2* + sf!
+	dup |sf| + sf!
+	sf! ;
+: Vector3@ ( a -- F: x y z ) dup sf@ dup |sf| + sf@ |sf| 2* + sf@ ;
+: Vector3+ ( a F: x y z -- ) 
+	dup |sf| 2* + sf@ f+ dup |sf| 2* + sf!
+	dup |sf| + sf@ f+ dup |sf| + sf!
+	dup sf@ f+ sf! ;
 
 \ common methods
 : .x sf@ ;		: .x! sf! ;
 : .y |sf| + sf@ ;	: .y! |sf| + sf! ;
 : .z |sf| 2* + sf@ ;	: .z! |sf| 2* + sf! ;
+
+: BoundingBox, Vector3, Vector3, ;
+: BoundingBox: create BoundingBox, ; immediate
+: BoundingBox! ( box F: xmin ymin zmin xmax ymax zmax -- ) 
+	dup |sf| 5 * + sf!	\ zmax
+	dup |sf| 4 * + sf!	\ ymax
+	dup |sf| 3 * + sf!	\ xmax
+	dup |sf| 2* + sf!	\ zmin
+	dup |sf| + sf!		\ ymin
+	sf! ;			\ xmin
  
 \ Camera construction
-: Camera: ( -- ) create ;
+: Camera: ( -- ) create ; immediate
 : :Camera.position ( F: x y z -- ) Vector3, ;   : Camera.position ( a -- a ) ;
 : :Camera.target ( F: x y z -- ) Vector3, ;	: Camera.target   ( a -- a' ) |sf| 3 * + ;
 : :Camera.up ( F: x y z -- ) Vector3, ;		: Camera.up       ( a -- a' ) |sf| 6 * + ;
 : :Camera.fovy ( F: f -- ) sf, ;		: Camera.fovy	  ( a -- a' ) |sf| 9 * + ;
-: :Camera.projection: ( i -- ) , ;		: Camera.projection ( a -- a' ) |sf| 10 * + ;
+: :Camera.proj ( i -- ) , ;			: Camera.proj     ( a -- a' ) |sf| 10 * + ;
 
 0 CONSTANT CAMERA_PERSPECTIVE
 1 CONSTANT CAMERA_ORTHOGRAPHIC
 
-: Color: ( abgr -- ) create l, does> l@ ;
+: Color: ( abgr -- ) create l, does> l@ ; immediate
 
-: .r $ff and ;			: .r! $ff and or ;
-: .g $ff00 and 8 rshift ;	: .g! 8 lshift $ff00 and or ;
-: .b $ff0000 and 16 rshift ;	: .b! 16 lshift $ff0000 and or ;
-: .a $ff000000 and 24 rshift ;	: .a! 24 lshift $ff000000 and or ;
+: .red $ff and ;			: .red! $ff and or ;
+: .green $ff00 and 8 rshift ;		: .green! 8 lshift $ff00 and or ;
+: .blue $ff0000 and 16 rshift ;		: .blue! 16 lshift $ff0000 and or ;
+: .alpha $ff000000 and 24 rshift ;	: .alpha! 24 lshift $ff000000 and or ;
 
-: float: ( F: f -- ) create sf, does> sf@ ;
+: float: ( F: f -- ) create sf, does> sf@ ; immediate
+
+\ key constants
+ 0 CONSTANT KEY_NULL			\ Key: NULL, used for no key pressed
+39 CONSTANT KEY_APOSTROPHE		\ Key: '
+44 CONSTANT KEY_COMMA			\ Key: ,
+45 CONSTANT KEY_MINUS			\ Key: -
+46 CONSTANT KEY_PERIOD			\ Key: .
+47 CONSTANT KEY_SLASH			\ Key: /
+48 CONSTANT KEY_ZERO			\ Key: 0
+49 CONSTANT KEY_ONE			\ Key: 1
+50 CONSTANT KEY_TWO			\ Key: 2
+51 CONSTANT KEY_THREE			\ Key: 3
+52 CONSTANT KEY_FOUR			\ Key: 4
+53 CONSTANT KEY_FIVE			\ Key: 5
+54 CONSTANT KEY_SIX			\ Key: 6
+55 CONSTANT KEY_SEVEN			\ Key: 7
+56 CONSTANT KEY_EIGHT			\ Key: 8
+57 CONSTANT KEY_NINE			\ Key: 9
+59 CONSTANT KEY_SEMICOLON		\ Key: ;
+61 CONSTANT KEY_EQUAL			\ Key: =
+65 CONSTANT KEY_A			\ Key: A | a
+66 CONSTANT KEY_B			\ Key: B | b
+67 CONSTANT KEY_C			\ Key: C | c
+68 CONSTANT KEY_D			\ Key: D | d
+69 CONSTANT KEY_E			\ Key: E | e
+70 CONSTANT KEY_F			\ Key: F | f
+71 CONSTANT KEY_G			\ Key: G | g
+72 CONSTANT KEY_H			\ Key: H | h
+73 CONSTANT KEY_I			\ Key: I | i
+74 CONSTANT KEY_J			\ Key: J | j
+75 CONSTANT KEY_K			\ Key: K | k
+76 CONSTANT KEY_L			\ Key: L | l
+77 CONSTANT KEY_M			\ Key: M | m
+78 CONSTANT KEY_N			\ Key: N | n
+79 CONSTANT KEY_O			\ Key: O | o
+80 CONSTANT KEY_P			\ Key: P | p
+81 CONSTANT KEY_Q			\ Key: Q | q
+82 CONSTANT KEY_R			\ Key: R | r
+83 CONSTANT KEY_S			\ Key: S | s
+84 CONSTANT KEY_T			\ Key: T | t
+85 CONSTANT KEY_U			\ Key: U | u
+86 CONSTANT KEY_V			\ Key: V | v
+87 CONSTANT KEY_W			\ Key: W | w
+88 CONSTANT KEY_X			\ Key: X | x
+89 CONSTANT KEY_Y			\ Key: Y | y
+90 CONSTANT KEY_Z			\ Key: Z | z
+91 CONSTANT KEY_LEFT_BRACKET		\ Key: [
+92 CONSTANT KEY_BACKSLASH		\ Key: '\'
+93 CONSTANT KEY_RIGHT_BRACKET		\ Key: ]
+96 CONSTANT KEY_GRAVE			\ Key: `
+32 CONSTANT KEY_SPACE			\ Key: Space
+256 CONSTANT KEY_ESCAPE			\ Key: Esc
+257 CONSTANT KEY_ENTER			\ Key: Enter
+258 CONSTANT KEY_TAB			\ Key: Tab
+259 CONSTANT KEY_BACKSPACE		\ Key: Backspace
+260 CONSTANT KEY_INSERT			\ Key: Ins
+261 CONSTANT KEY_DELETE			\ Key: Del
+262 CONSTANT KEY_RIGHT			\ Key: Cursor right
+263 CONSTANT KEY_LEFT			\ Key: Cursor left
+264 CONSTANT KEY_DOWN			\ Key: Cursor down
+265 CONSTANT KEY_UP			\ Key: Cursor up
+266 CONSTANT KEY_PAGE_UP		\ Key: Page up
+267 CONSTANT KEY_PAGE_DOWN		\ Key: Page down
+268 CONSTANT KEY_HOME			\ Key: Home
+269 CONSTANT KEY_END			\ Key: End
+280 CONSTANT KEY_CAPS_LOCK		\ Key: Caps lock
+281 CONSTANT KEY_SCROLL_LOCK		\ Key: Scroll down
+282 CONSTANT KEY_NUM_LOCK		\ Key: Num lock
+283 CONSTANT KEY_PRINT_SCREEN		\ Key: Print screen
+284 CONSTANT KEY_PAUSE			\ Key: Pause
+290 CONSTANT KEY_F1			\ Key: F1
+291 CONSTANT KEY_F2			\ Key: F2
+292 CONSTANT KEY_F3			\ Key: F3
+293 CONSTANT KEY_F4			\ Key: F4
+294 CONSTANT KEY_F5			\ Key: F5
+295 CONSTANT KEY_F6			\ Key: F6
+296 CONSTANT KEY_F7			\ Key: F7
+297 CONSTANT KEY_F8			\ Key: F8
+298 CONSTANT KEY_F9			\ Key: F9
+299 CONSTANT KEY_F10			\ Key: F10
+300 CONSTANT KEY_F11			\ Key: F11
+301 CONSTANT KEY_F12			\ Key: F12
+340 CONSTANT KEY_LEFT_SHIFT		\ Key: Shift left
+341 CONSTANT KEY_LEFT_CONTROL		\ Key: Control left
+342 CONSTANT KEY_LEFT_ALT		\ Key: Alt left
+343 CONSTANT KEY_LEFT_SUPER		\ Key: Super left
+344 CONSTANT KEY_RIGHT_SHIFT		\ Key: Shift right
+345 CONSTANT KEY_RIGHT_CONTROL		\ Key: Control right
+346 CONSTANT KEY_RIGHT_ALT		\ Key: Alt right
+347 CONSTANT KEY_RIGHT_SUPER		\ Key: Super right
+348 CONSTANT KEY_KB_MENU		\ Key: KB menu
+320 CONSTANT KEY_KP_0			\ Key: Keypad 0
+321 CONSTANT KEY_KP_1			\ Key: Keypad 1
+322 CONSTANT KEY_KP_2			\ Key: Keypad 2
+323 CONSTANT KEY_KP_3			\ Key: Keypad 3
+324 CONSTANT KEY_KP_4			\ Key: Keypad 4
+325 CONSTANT KEY_KP_5			\ Key: Keypad 5
+326 CONSTANT KEY_KP_6			\ Key: Keypad 6
+327 CONSTANT KEY_KP_7			\ Key: Keypad 7
+328 CONSTANT KEY_KP_8			\ Key: Keypad 8
+329 CONSTANT KEY_KP_9			\ Key: Keypad 9
+330 CONSTANT KEY_KP_DECIMAL		\ Key: Keypad .
+331 CONSTANT KEY_KP_DIVIDE		\ Key: Keypad /
+332 CONSTANT KEY_KP_MULTIPLY		\ Key: Keypad *
+333 CONSTANT KEY_KP_SUBTRACT		\ Key: Keypad -
+334 CONSTANT KEY_KP_ADD			\ Key: Keypad +
+335 CONSTANT KEY_KP_ENTER		\ Key: Keypad Enter
+336 CONSTANT KEY_KP_EQUAL		\ Key: Keypad =
+4 CONSTANT KEY_BACK			\ Key: Android back button
+5 CONSTANT KEY_MENU			\ Key: Android menu button
+24 CONSTANT KEY_VOLUME_UP		\ Key: Android volume up button
+25 CONSTANT KEY_VOLUME_DOWN		\ Key: Android volume down button
+
+: down IsKeyDown 1 and ;		\ booleans only set the low nibbles
+: up   IsKeyUp   1 and ;
 
 END-PACKAGE
