@@ -68,10 +68,19 @@ struct Texture
 	c_int			texture_format
 ;struct
 
+Texture extend Texture2D	\ another alias
+;struct
+
+Texture extend TextureCubemap	\ also an alias
+;struct
+
 struct RenderTexture
 	c_int			render_texture_id
 	Texture c_struct	render_texture_texture
 	Texture c_struct	render_texture_depth
+;struct
+
+RenderTexture extend RenderTexture2D	\ alias
 ;struct
 
 struct NPatchInfo
@@ -209,11 +218,73 @@ struct Wave
 	c_void*			wave_data
 ;struct
 
+struct AudioStream
+	c_void*			audioStream_buffer
+	c_void*			audioStream_procesor
+	c_int			audioStream_sampleRate
+	c_int			audioStream_sampleSize
+	c_int			audioStream_channels
+	c_int			audooStream_padding		\ don't know what this is but it looks like it is compiled
+;struct
 
+struct Sound
+	AudioStream c_struct	sound_stream
+	c_int			sound_frameCount
+	c_int			sound_padding
+;struct
+
+struct Music
+	AudioStream c_struct	music_stream
+	c_int			music_frameCount
+	c_int			music_looping
+	c_int			music_ctxType
+	c_int			music_padding			\ need to align pointer
+	c_void*			music_ctxData
+;struct
+
+struct VrDeviceInfo
+	c_int			vrDeviceInfo_hResolution
+	c_int			vrDeviceInfo_vResolution
+	c_float			vrDeviceInfo_hScreenSize
+	c_float			vrDeviceInfo_vScreenSize
+	c_float			vrDeviceInfo_eyeToScreenDistance
+	c_float			vrDeviceInfo_lenseSeparationDistance
+	c_float			vrDeviceIndo_interpupillaryDistance
+    	4 [] c_float		vrDeviceIndo_lensDistortionValues
+    	4 [] c_float		vrDeviceIndo_chromaAbCorrection
+;struct
+
+struct VrStereoConfig
+	2 [] Matrix c_struct 	vrStereoConfig_projection
+    	2 [] Matrix c_struct	vrStereCconfig_viewOffset
+	2 [] c_float		vrStereoConfig_leftLensCenter
+	2 [] c_float		vrStereoConfig_rightLensCenter
+	2 [] c_float		vrStereoConfig_leftScreenCenter
+	2 [] c_float		vrStereoConfig_rightScreenCenter
+	2 [] c_float		vrStereoConfig_scale
+	2 [] c_float		vrStereoConfig_scaleIn
+;struct
+
+struct FilePathList
+	c_int			filePathList_capacity
+	c_int			filePathList_count
+	c_void**		filePathList_paths
+;struct
+
+struct AutomationEvent
+	c_int			automationEvent_frame
+	c_int			automationEvent_type
+	4 [] c_int		automationEvent_params
+;struct
+
+struct AutomationEventList
+	c_int			automationEventList_capacity
+	c_int			automationEventList_count
+	c_void*			automationEventList_events
+;struct
 
 
 : test
-
 Color . ." Color" cr
 Vector2 . ." Vector2" cr
 Matrix . ." Matrix" cr
@@ -237,5 +308,14 @@ Ray . ." Ray" cr
 RayCollision . ." RayCollision" cr
 BoundingBox . ." BoundingBox" cr
 Wave . ." Wave" cr
-
+AudioStream . ." AudioStream" cr
+Sound . ." Sound" cr
+Music . ." Music" cr
+VrDeviceInfo . ." VrDeviceInfo" cr
+VrStereoConfig . ." VrStereoConfig" cr
+FilePathList . ." FilePathList" cr
+AutomationEvent . ." AutomationEvent" cr
+AutomationEventList . ." AutomationEventList" cr
 ;
+
+test
