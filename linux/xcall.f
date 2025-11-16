@@ -36,12 +36,19 @@ CODE stack-call ( addr n func -- x )
 	ret END-CODE 
 
 : (X-RET0) ( -- )
-	DOES> ( -- x ) 2@ stack-call 
+	DOES> ( -- x ) 2@ stack-call drop ;		\ 
 
 
+
+: (look-ahead) >IN @ >R TOKEN 2DROP ; 			\ seek past the function name
+
+: (look-back) R> >IN ! ;				\ reset input buffer
+
+: (count-args) 
 
 : XFUNCTION: ( "name" -- )
+	
 	create +smudge 
-h
+
 
 END-PACKAGE
