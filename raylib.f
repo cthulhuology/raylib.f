@@ -1,6 +1,9 @@
 PACKAGE raylib
-XLIBRARY raylib raylib.dll libraylib.so  \ Loads libraylib.so or raylib.dll or equivalent
+LIBRARY libraylib raylib.dll libraylib.so  \ Loads libraylib.so or raylib.dll or equivalent
+
 PRIVATE
+
+include raylib_structs.f
 
 \ Callbacks to hook some internal Module
 
@@ -69,8 +72,8 @@ FUNCTION: BeginDrawing                     ( -- )                   \ Setup canv
 FUNCTION: EndDrawing                       ( -- )                   \ End canvas drawing and swap buffers (double buffering) : void
 FUNCTION: BeginMode2D                      ( a -- )                 \ Begin 2D mode with custom camera (2D) : Camera2D camera
 FUNCTION: EndMode2D                        ( -- )                   \ Ends 2D mode with custom camera : void
-FUNCTION: BeginMode3D                      ( a -- )                 \ Begin 3D mode with custom camera (3D) : Camera3D camera
-FUNCTION: EndMode3D                        ( -- )                   \ Ends 3D mode and returns to default 2D orthographic mode : void
+XFUNCTION: BeginMode3D Camera3D 
+XFUNCTION: EndMode3D                        ( -- )                   \ Ends 3D mode and returns to default 2D orthographic mode : void
 FUNCTION: BeginTextureMode                 ( a -- )                 \ Begin drawing to render texture : RenderTexture2D target
 FUNCTION: EndTextureMode                   ( -- )                   \ Ends drawing to render texture : void
 FUNCTION: BeginShaderMode                  ( a -- )                 \ Begin custom shader drawing : Shader shader

@@ -17,7 +17,8 @@ def map_type(t)
 	  MaterialMap Material Transform BoneInfo Model ModelAnimation Ray RayCollision BoundingBox Wave
 	  AudioStream Sound Music VrDeviceInfo VrStereoConfig FilePathList AutomationEventList
 	]
-	# Type mapping for Forth stack (param and return use the same for simplicity)
+	# Type mapping for Forth stack.  By-value structs use ffi.f ABI
+	# tokens; Color stays a packed cell (INTEGER 4) to match Color: helpers.
 	type_map = {
 	  "void" => "",
 	  "int" => "i",
@@ -46,9 +47,45 @@ def map_type(t)
 	  "int *" => "a",
 	  "AutomationEvent *" => "a",
 	  "Matrix *" => "a",
-	  # Structs default to "a", special case Color as "u"
-          "Font" => "a",
-	  "Color" => "u"
+	  "Color" => "u",
+	  "Vector2" => "{%8}",
+	  "Vector3" => "{%12}",
+	  "Vector4" => "{%16}",
+	  "Quaternion" => "{%16}",
+	  "Rectangle" => "{%16}",
+	  "Matrix" => "{64}",
+	  "Camera3D" => "{44}",
+	  "Camera" => "{44}",
+	  "Camera2D" => "{24}",
+	  "Image" => "{24}",
+	  "Texture" => "{20}",
+	  "Texture2D" => "{20}",
+	  "TextureCubemap" => "{20}",
+	  "RenderTexture" => "{44}",
+	  "RenderTexture2D" => "{44}",
+	  "NPatchInfo" => "{36}",
+	  "GlyphInfo" => "{40}",
+	  "Font" => "{48}",
+	  "Mesh" => "{120}",
+	  "Shader" => "{16}",
+	  "MaterialMap" => "{28}",
+	  "Material" => "{40}",
+	  "Transform" => "{40}",
+	  "BoneInfo" => "{36}",
+	  "Model" => "{120}",
+	  "ModelAnimation" => "{56}",
+	  "Ray" => "{24}",
+	  "RayCollision" => "{32}",
+	  "BoundingBox" => "{24}",
+	  "Wave" => "{24}",
+	  "AudioStream" => "{32}",
+	  "Sound" => "{40}",
+	  "Music" => "{56}",
+	  "VrDeviceInfo" => "{60}",
+	  "VrStereoConfig" => "{304}",
+	  "FilePathList" => "{16}",
+	  "AutomationEvent" => "{24}",
+	  "AutomationEventList" => "{16}"
 	}
 	nt = normalize_type(t)
 	type_map[nt] || "a"
@@ -70,9 +107,16 @@ input_file = ARGV[0] || "raylib.h"
 output_file = "raylib.f"
 
 File.open(output_file, "w") do |out|
+  out.puts "\\ Requires ffi.f (full SysV struct ABI) loaded first."
+  out.puts "include /home/dave/forth/ffi/ffi.f"
+  out.puts
   out.puts "PACKAGE raylib"
-  out.puts "LIBRARY raylib  \\ Loads libraylib.so or raylib.dll or equivalent"
+  out.puts "\\ Linux: libraylib.so is found via the dynamic linker (e.g. /usr/lib64)."
+  out.puts "\\ Windows builds should use: LIBRARY raylib.dll"
+  out.puts "LIBRARY libraylib.so"
   out.puts "PRIVATE"
+  out.puts
+  out.puts "include raylib_structs.f"
 
   current_section = nil
 
@@ -109,16 +153,10 @@ File.open(output_file, "w") do |out|
         # Map param types to Forth stack items
         stack_params = params.map { |p| map_type(p) }.join(' ')
 
-        # Handle return type
+        # Handle return type.  Struct returns (except packed Color) use
+        # the ABI token; the Forth caller supplies a dest buffer.
         if return_type == 'void'
           stack_return = ''
-        elsif is_struct_by_value?(return_type)
-          if return_type == 'Color'
-            stack_return = 'u'
-          else
-            stack_params = [stack_params].reject(&:empty?).join(' ')
-            stack_return = 'a'
-          end
         else
           stack_return = map_type(return_type)
         end

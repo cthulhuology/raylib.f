@@ -1,129 +1,99 @@
-
+empty
+only forth also definitions
 include raylib.f
 /raylib
-
-$ff808080 CONSTANT GRAY
-$ff505050 CONSTANT DARKGRAY
-$ff30ef00 CONSTANT GREEN
-$ffffffff CONSTANT WHITE
-$ff3030ef CONSTANT RED
 
 800 CONSTANT screenWidth
 450 CONSTANT screenHeight
 
-\ Define the camera to look into our 3d world
-Camera: camera 
-    0.0e 10.0e 10.0e	:Camera.position 
+VARIABLE playerColor
+VARIABLE collision
+
+\ Camera looking into the 3d world
+Camera: camera
+    0.0e 10.0e 10.0e	:Camera.position
     0.0e  0.0e  0.0e	:Camera.target
-    0.0e  1.0e  0.0e 	:Camera.up
+    0.0e  1.0e  0.0e	:Camera.up
     45.0e		:Camera.fovy
     CAMERA_PERSPECTIVE  :Camera.proj
 
-\ player on center
-0.0e 1.0e 2.0e Vector3: playerPosition 
+0.0e 1.0e 2.0e Vector3: playerPosition
 1.0e 2.0e 1.0e Vector3: playerSize
+GREEN playerColor !
 
-\ Player color
-GREEN value playerColor
-
-\ enemy Box
 -4.0e 1.0e 0.0e Vector3: enemyBoxPos
 2.0e 2.0e 2.0e Vector3: enemyBoxSize
 
-\ enemy Sphere
 4.0e 0.0e 0.0e Vector3: enemySpherePos
 1.5e float: enemySphereSize
 
-0 value collision
+0 collision !
 
-
-\ structures for collision detection calls
-\ min xyz    \ max xyz
 0.e 0.e 0.e  0.e 0.e 0.e BoundingBox: playerBounds
 0.e 0.e 0.e  0.e 0.e 0.e BoundingBox: enemyBounds
 
+\ Axis-aligned box from a center Vector3 and a size Vector3.
+: aabb! ( pos size box -- )
+   >r
+   over .x  dup .x f2/ f-
+   over .y  dup .y f2/ f-
+   over .z  dup .z f2/ f-
+   over .x  dup .x f2/ f+
+   over .y  dup .y f2/ f+
+   over .z  dup .z f2/ f+
+   2drop r> BoundingBox! ;
+
 : move-player
-	KEY_RIGHT down if  0.2e else
-        KEY_LEFT  down if -0.2e else 
-			    0.e then then 	\ delta x
-	                    0.e 	  	\ delta y
-        KEY_DOWN  down if  0.2e else
-        KEY_UP    down if -0.2e else
-			    0.e then then 	\ delta z
-	playerPosition Vector3+ 
-	
-	playerPosition .x f. space playerPosition .y f. space playerPosition .z f. cr
-	;
+   KEY_RIGHT down if  0.2e else
+   KEY_LEFT  down if -0.2e else 0.e then then
+   0.e
+   KEY_DOWN  down if  0.2e else
+   KEY_UP    down if -0.2e else 0.e then then
+   playerPosition Vector3+ ;
 
 : check-collisions
-        0 to collision
-	playerPosition .x playerSize .x 2/ -
-	playerPosition .y playerSize .y 2/ -
-	playerPosition .z playerSize .z 2/ -
-	playerPosition .x playerSize .x 2/ + 
-	playerPosition .y playerSize .y 2/ +
-	playerPosition .z playerSize .z 2/ +
-	playerBounds BoundingBox!
-	
-	enemyBoxPos .x enemyBoxSize .x 2/ -
-	enemyBoxPos .y enemyBoxSize .y 2/ -
-	enemyBoxPos .z enemyBoxSize .z 2/ - 
-	enemyBoxPos .x enemyBoxSize .x 2/ + 
-	enemyBoxPos .y enemyBoxSize .y 2/ +
-	enemyBoxPos .z enemyBoxSize .z 2/ +
-	enemyBounds BoundingBox!
+   0 collision !
+   playerPosition playerSize playerBounds aabb!
+   enemyBoxPos    enemyBoxSize  enemyBounds aabb!
+   playerBounds enemyBounds CheckCollisionBoxes if
+      1 collision ! then
+   playerBounds enemySpherePos enemySphereSize CheckCollisionBoxSphere if
+      1 collision ! then
+   collision @ if RED else GREEN then playerColor ! ;
 
-	playerBounds enemyBounds CheckCollisionBoxes if 
-		1 to collision then
+: drawPlayer
+   playerPosition playerSize playerColor @ DrawCubeV ;
 
-        \ Check collisions player vs enemy-sphere
-	playerBounds enemySpherePos enemySphereSize CheckCollisionBoxSphere if
-		1 to collision then
+: drawEnemies
+   enemyBoxPos enemyBoxSize .x enemyBoxSize .y enemyBoxSize .z GRAY DrawCube
+   enemyBoxPos enemyBoxSize .x enemyBoxSize .y enemyBoxSize .z DARKGRAY DrawCubeWires
+   enemySpherePos enemySphereSize GRAY DrawSphere
+   enemySpherePos enemySphereSize 16 16 DARKGRAY DrawSphereWires ;
 
-        collision if RED else GREEN then to playerColor ;
-        
+: drawField  10 1.0e DrawGrid ;
 
-: drawPlayer playerPosition playerSize playerColor DrawCubeV ;
-: drawField 10 1.0e DrawGrid ;
+: scene
+   BeginDrawing
+      WHITE ClearBackground
+      camera BeginMode3D
+         drawEnemies
+         drawPlayer
+         drawField
+      EndMode3D
+      z" Move player with arrow keys to collide" 220 40 20 GRAY DrawText
+      10 10 DrawFPS
+   EndDrawing ;
+
 : main
-
-    \ initialize the game window
-    screenWidth screenHeight z" collisions example" InitWindow
-    60 SetTargetFPS
-
+   screenWidth screenHeight z" collisions example" InitWindow
+   60 SetTargetFPS
    begin
+      move-player
+      check-collisions
+      scene
+   WindowShouldClose until
+   CloseWindow ;
 
-        \ Move player 
-	move-player
-        
-        \ Check collisions player vs enemy-box
-\	check-collisions
-
-	\ Draw
-        BeginDrawing
-
-            WHITE ClearBackground
-
-            camera BeginMode3D
-
-                \ Draw enemy-box
-\		enemyBoxPos enemyBoxSize .x enemyBoxSize .y enemyBoxSize .z GRAY DrawCube
-\		enemyBoxPos enemyBoxSize .x enemyBoxSize .y enemyBoxSize .z DARKGRAY DrawCubeWires
-\
-\                \ Draw enemy-sphere
-\		enemySpherePos enemySphereSize GRAY DrawSphere
-\		enemySpherePos enemySphereSize 16 16 DARKGRAY DrawSphereWires
-\
-	      \ drawPlayer
-		drawField
-
-            EndMode3D
-
-            z" Move player with arrow keys to collide" 220 40 20 GRAY DrawText
-
-            10 10 DrawFPS
-
-        EndDrawing
-    
-    WindowShouldClose until
-    CloseWindow ;
+' main 'main !
+PROGRAM collision
+bye
