@@ -42,6 +42,7 @@ EOF
   timeout 4 $SF "$tmp" >>"$LOG" 2>&1
   local rc=$?
   rm -f "$tmp"
+  stty sane < /dev/tty 2>/dev/null || true
   # 124 = timeout (still running = success for a GUI example)
   # 0 = clean exit
   if [ "$rc" = 0 ] || [ "$rc" = 124 ]; then

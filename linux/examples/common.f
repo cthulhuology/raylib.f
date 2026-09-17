@@ -10,6 +10,14 @@ include /home/dave/forth/raylib.f/linux/raymath.f
 
 WARNING OFF
 
+\ GLFW/raylib leaves the terminal in raw mode on Linux.  There is no
+\ raylib restore call; stty sane on the real tty after CloseWindow.
+' CloseWindow CONSTANT 'rl-CloseWindow
+: restore-tty ( -- )
+   s" stty sane < /dev/tty 2>/dev/null" >SHELL DROP ;
+: CloseWindow ( -- )
+   'rl-CloseWindow execute  restore-tty ;
+
 \ v2x/v2y consume the vector address; re-fetch src for each component.
 : Vector2Rotate ( dest src F: ang -- dest )
    locals| src dest |
@@ -343,4 +351,5 @@ FVARIABLE (ep)  FVARIABLE (es)
 \ file after this include.
 : example-end
    s" EXAMPLE-NO-RUN" pad place  pad find nip if exit then
-   s" example" evaluate ;
+   s" example" evaluate
+   restore-tty ;

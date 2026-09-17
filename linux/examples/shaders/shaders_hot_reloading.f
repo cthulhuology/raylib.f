@@ -17,6 +17,8 @@ z" /home/dave/Code/raylib/examples/shaders/resources/shaders/glsl330/reload.fs" 
 : reload
    shd UnloadShader
    shd 0 fs-path LoadShader drop
+   \ If load failed raylib returns the default shader; skip updating locs in that case
+   shd l@ rlGetShaderIdDefault = if exit then
    shd z" time" GetShaderLocation timeLoc !
    shd z" mouse" GetShaderLocation mouseLoc ! ;
 

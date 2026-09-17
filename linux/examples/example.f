@@ -54,7 +54,8 @@ variable fail
    s" : EXAMPLE-NO-RUN ;" r@ wr  r@ wrnl
    s" include " r@ wr  /EX r@ wr  s" /common.f" r@ wr  r@ wrnl
    s" include " r@ wr  /EX r@ wr  s" /" r@ wr  2dup r@ wr  r@ wrnl
-   s" ' example 'MAIN !" r@ wr  r@ wrnl
+   s" : run-example  example restore-tty ;" r@ wr  r@ wrnl
+   s" ' run-example 'MAIN !" r@ wr  r@ wrnl
    s" PROGRAM " r@ wr  /BIN r@ wr  s" /" r@ wr
       2dup bin-name r@ wr  r@ wrnl
    s" bye" r@ wr  r@ wrnl

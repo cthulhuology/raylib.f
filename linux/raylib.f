@@ -691,6 +691,100 @@ FUNCTION: AttachAudioStreamProcessor       ( {32} a -- )            \ Attach aud
 FUNCTION: DetachAudioStreamProcessor       ( {32} a -- )            \ Detach audio stream processor from stream : AudioStream stream, AudioCallback processor
 FUNCTION: AttachAudioMixedProcessor        ( a -- )                 \ Attach audio stream processor to the entire audio pipeline, receives the samples as 'float' : AudioCallback processor
 FUNCTION: DetachAudioMixedProcessor        ( a -- )                 \ Detach audio stream processor from the entire audio pipeline : AudioCallback processor
+
+\ rlgl -- same shared library as raylib
+\ Immediate mode
+FUNCTION: rlBegin                          ( i -- )                 \ Initialize drawing mode (how to organize vertex)
+FUNCTION: rlEnd                            ( -- )                   \ Finish vertex providing
+FUNCTION: rlVertex2f                       ( %f %f -- )             \ Define one vertex (position) - 2 float
+FUNCTION: rlVertex3f                       ( %f %f %f -- )          \ Define one vertex (position) - 3 float
+FUNCTION: rlTexCoord2f                     ( %f %f -- )             \ Define one vertex (texture coord) - 2 float
+FUNCTION: rlNormal3f                       ( %f %f %f -- )          \ Define one vertex (normal) - 3 float
+FUNCTION: rlColor4ub                       ( i i i i -- )           \ Define one vertex (color) - 4 byte
+FUNCTION: rlColor3f                        ( %f %f %f -- )          \ Define one vertex (color) - 3 float
+FUNCTION: rlColor4f                        ( %f %f %f %f -- )       \ Define one vertex (color) - 4 float
+FUNCTION: rlSetTexture                     ( u -- )                 \ Set texture for next batch rendering
+FUNCTION: rlCheckRenderBatchLimit          ( i -- i )               \ Check buffer overflow for vertex count
+FUNCTION: rlDrawRenderBatchActive          ( -- )                   \ Update and draw default internal render batch
+
+\ rlgl matrix stack
+FUNCTION: rlMatrixMode                     ( i -- )                 \ Choose the current matrix to be transformed
+FUNCTION: rlPushMatrix                     ( -- )                   \ Push the current matrix to stack
+FUNCTION: rlPopMatrix                      ( -- )                   \ Pop latest inserted matrix from stack
+FUNCTION: rlLoadIdentity                   ( -- )                   \ Reset current matrix to identity matrix
+FUNCTION: rlTranslatef                     ( %f %f %f -- )          \ Multiply current matrix by a translation matrix
+FUNCTION: rlRotatef                        ( %f %f %f %f -- )       \ Multiply current matrix by a rotation matrix (angle, x, y, z)
+FUNCTION: rlScalef                         ( %f %f %f -- )          \ Multiply current matrix by a scaling matrix
+
+\ rlgl blend mode
+FUNCTION: rlSetBlendMode                   ( i -- )                 \ Set blending mode
+FUNCTION: rlSetBlendFactors                ( i i i -- )             \ Set blending mode factor and equation
+
+\ rlgl shader/texture state
+FUNCTION: rlGetShaderIdDefault             ( -- u )                 \ Get default shader id
+FUNCTION: rlEnableShader                   ( u -- )                 \ Enable shader program
+FUNCTION: rlDisableShader                  ( -- )                   \ Disable shader program
+FUNCTION: rlEnableTexture                  ( u -- )                 \ Enable texture
+FUNCTION: rlDisableTexture                 ( -- )                   \ Disable texture
+FUNCTION: rlEnableTextureCubemap           ( u -- )                 \ Enable texture cubemap
+FUNCTION: rlDisableTextureCubemap          ( -- )                   \ Disable texture cubemap
+FUNCTION: rlActiveTextureSlot              ( i -- )                 \ Select and activate a texture slot
+FUNCTION: rlSetUniformSampler              ( i u -- )               \ Set shader value sampler
+
+\ rlgl depth/color/culling state
+FUNCTION: rlDisableBackfaceCulling         ( -- )                   \ Disable backface culling
+FUNCTION: rlEnableBackfaceCulling          ( -- )                   \ Enable backface culling
+FUNCTION: rlDisableDepthMask               ( -- )                   \ Disable depth write (depth mask)
+FUNCTION: rlEnableDepthMask                ( -- )                   \ Enable depth write (depth mask)
+FUNCTION: rlEnableDepthTest                ( -- )                   \ Enable depth test
+FUNCTION: rlDisableDepthTest               ( -- )                   \ Disable depth test
+FUNCTION: rlEnableColorBlend               ( -- )                   \ Enable color blending
+FUNCTION: rlDisableColorBlend              ( -- )                   \ Disable color blending
+FUNCTION: rlEnableScissorTest              ( -- )                   \ Enable scissor test
+FUNCTION: rlDisableScissorTest             ( -- )                   \ Disable scissor test
+FUNCTION: rlScissor                        ( i i i i -- )           \ Scissor test
+
+\ rlgl framebuffer
+FUNCTION: rlLoadFramebuffer                ( -- u )                 \ Load an empty framebuffer
+FUNCTION: rlUnloadFramebuffer              ( u -- )                 \ Delete framebuffer from GPU
+FUNCTION: rlEnableFramebuffer              ( u -- )                 \ Activate framebuffer (fbo id)
+FUNCTION: rlDisableFramebuffer             ( -- )                   \ Activate default framebuffer
+FUNCTION: rlFramebufferAttach              ( u u i i i -- )         \ Attach texture/renderbuffer to a framebuffer
+FUNCTION: rlFramebufferComplete            ( u -- i )               \ Verify framebuffer is complete
+FUNCTION: rlBindFramebuffer                ( i u -- )               \ Bind framebuffer
+FUNCTION: rlActiveDrawBuffers              ( i -- )                 \ Activate multiple draw color buffers
+FUNCTION: rlBlitFramebuffer                ( i i i i i i i i i -- ) \ Blit active framebuffer to destination: srcX srcY srcW srcH dstX dstY dstW dstH mask
+
+\ rlgl texture management
+FUNCTION: rlLoadTexture                    ( a i i i i -- u )       \ Load texture data into GPU
+FUNCTION: rlLoadTextureDepth               ( i i i -- u )           \ Load depth texture/renderbuffer
+FUNCTION: rlUnloadTexture                  ( u -- )                 \ Unload texture from GPU memory
+
+\ rlgl draw commands
+FUNCTION: rlLoadDrawQuad                   ( -- )                   \ Load and draw a quad
+FUNCTION: rlClearScreenBuffers             ( -- )                   \ Clear color and depth buffers
+FUNCTION: rlClearColor                     ( i i i i -- )           \ Clear color buffer with color (r g b a bytes)
+FUNCTION: rlViewport                       ( i i i i -- )           \ Set the viewport area
+
+\ rlgl matrix retrieval/set
+FUNCTION: rlGetMatrixModelview             ( -- {64} )              \ Get internal modelview matrix
+FUNCTION: rlGetMatrixProjection            ( -- {64} )              \ Get internal projection matrix
+FUNCTION: rlSetMatrixModelview             ( {64} -- )              \ Set a custom modelview matrix
+FUNCTION: rlSetMatrixProjection            ( {64} -- )              \ Set a custom projection matrix
+
+\ rlgl shader uniforms
+FUNCTION: rlGetLocationUniform             ( u a -- i )             \ Get shader location uniform
+FUNCTION: rlSetUniform                     ( i a i i -- )           \ Set shader value uniform
+
+\ rlgl vertex buffers
+FUNCTION: rlLoadVertexBuffer               ( a i i -- u )           \ Load a vertex buffer (data, size, dynamic)
+FUNCTION: rlEnableVertexArray              ( u -- i )               \ Enable vertex array (VAO)
+FUNCTION: rlDisableVertexArray             ( -- )                   \ Disable vertex array (VAO)
+FUNCTION: rlEnableVertexAttribute          ( u -- )                 \ Enable vertex attribute index
+FUNCTION: rlDisableVertexAttribute         ( u -- )                 \ Disable vertex attribute index
+FUNCTION: rlSetVertexAttribute             ( u i i i i a -- )       \ Set vertex attribute (index, compSize, type, normalized, stride, ptr)
+FUNCTION: rlUnloadVertexBuffer             ( u -- )                 \ Unload vertex buffer from GPU
+
 PUBLIC
 : /raylib raylib +order ;
 : Vector2, ( F: x y -- ) swap sf, sf, ;

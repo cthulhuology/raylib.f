@@ -1,5 +1,4 @@
 \ Port of raylib examples/models/models_skybox_rendering.c
-\ Cubemap generation via rlgl omitted; textured cube + orbital camera.
 
 800 CONSTANT screenWidth
 450 CONSTANT screenHeight
@@ -13,6 +12,7 @@ Camera: camera
 
 CREATE mesh 128 ALLOT
 CREATE skybox 128 ALLOT
+CREATE img 32 ALLOT
 CREATE tex 32 ALLOT
 CREATE shd 32 ALLOT
 0e 0e 0e Vector3: origin3
@@ -29,15 +29,22 @@ CREATE shd 32 ALLOT
    0 set-ival
    shd dup z" doGamma" GetShaderLocation ival SHADER_UNIFORM_INT SetShaderValue
    shd dup z" vflipped" GetShaderLocation ival SHADER_UNIFORM_INT SetShaderValue
-   tex z" /home/dave/Code/raylib/examples/models/resources/skybox.png" LoadTexture drop
-   skybox tex set-diffuse
+   img z" /home/dave/Code/raylib/examples/models/resources/skybox.png" LoadImage drop
+   tex img CUBEMAP_LAYOUT_AUTO_DETECT LoadTextureCubemap drop
+   img UnloadImage
+   skybox mdl.materials MATERIAL_MAP_CUBEMAP tex SetMaterialTexture
+   DisableCursor
    60 SetTargetFPS
    begin
-      camera CAMERA_ORBITAL UpdateCamera
+      camera CAMERA_FIRST_PERSON UpdateCamera
       BeginDrawing
          RAYWHITE ClearBackground
          camera BeginMode3D
-            skybox origin3 16e WHITE DrawModel
+            rlDisableBackfaceCulling
+            rlDisableDepthMask
+               skybox origin3 16e WHITE DrawModel
+            rlEnableBackfaceCulling
+            rlEnableDepthMask
             10 1e DrawGrid
          EndMode3D
          z" Skybox simplified (no HDR cubemap blit)" 10 10 20 DARKGRAY DrawText
